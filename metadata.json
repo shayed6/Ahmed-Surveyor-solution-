@@ -1,0 +1,6 @@
+{
+  "name": "Ahmed Survey Solution",
+  "description": "আহম্মদ টোটাল স্টেশন - সার্ভে এন্ড সলুশন সেন্টার। নির্ভুল জরিপ, নির্ভরযোগ্য সমাধান।",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
