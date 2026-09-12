@@ -53,7 +53,7 @@ export const InheritancePdfReport: React.FC<InheritancePdfReportProps> = ({
       {/* 1. OFFICIAL LETTERHEAD / HEADER */}
       <div className="border-b-2 border-[#0A2540] pb-4 mb-4 text-center relative">
         <div className="inline-block px-3 py-1 bg-emerald-50 text-emerald-800 border border-emerald-300 rounded-full text-[11px] font-bold mb-2">
-          সরকারি সনদপ্রাপ্ত আধুনিক ডিজিটাল সার্ভে ও আইনি পরামর্শ কেন্দ্র
+          সরকারি সনদপ্রাপ্ত আধুনিক ডিজিটাল সার্ভে এন্ড সলুশন সেন্টার
         </div>
         <h1 className="text-2xl font-black text-[#0A2540] tracking-tight leading-tight">
           আহম্মদ টোটাল স্টেশন - সার্ভে এন্ড সলুশন সেন্টার
@@ -294,7 +294,7 @@ export const InheritancePdfReport: React.FC<InheritancePdfReportProps> = ({
           <div className="w-44 border-b border-gray-400 pb-1 text-gray-400 font-mono text-[10px]">
             স্বাক্ষর
           </div>
-          <p className="font-bold text-gray-800">প্রধান সার্ভেয়ার / আইনি পরামর্শক</p>
+          <p className="font-bold text-gray-800">প্রধান সার্ভেয়ার</p>
           <p className="text-[10px] text-gray-500">আহম্মদ টোটাল স্টেশন ও সল্যুশন সেন্টার</p>
         </div>
       </div>

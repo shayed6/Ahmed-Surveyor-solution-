@@ -106,7 +106,8 @@ export const InheritanceCalculatorView: React.FC<InheritanceCalculatorViewProps>
     if (!pdfReportRef.current || !result) return;
     setIsExportingPdf(true);
     try {
-      const fileName = `উত্তরাধিকার_সম্পত্তি_বণ্টন_${religion === 'muslim' ? 'ফারায়েজ' : 'দায়ভাগ'}.pdf`;
+      const safeSuffix = religion === 'muslim' ? 'Farayez' : 'Dayabhaga';
+      const fileName = `Ahmed_Survey_Inheritance_${safeSuffix}.pdf`;
       const success = await exportElementToPdf(pdfReportRef.current, fileName);
       if (success) {
         setPdfExportSuccess(true);
@@ -1041,15 +1042,16 @@ export const InheritanceCalculatorView: React.FC<InheritanceCalculatorViewProps>
           </div>
         )}
 
-        {/* Offscreen Target for PDF Generation (captured by html2canvas) */}
+        {/* Target for PDF Generation (captured by html2canvas-pro) */}
         {result && (
           <div
             style={{
               position: 'fixed',
-              left: '-9999px',
               top: 0,
+              left: 0,
               width: '800px',
-              zIndex: -100,
+              zIndex: -9999,
+              opacity: 0.01,
               pointerEvents: 'none',
             }}
           >
