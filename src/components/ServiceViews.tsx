@@ -1,18 +1,26 @@
 import React, { useState } from 'react';
-import { ArrowLeft, CheckCircle2, Phone, Search, MapPin, Calendar, Clock, User, Building2, Send, Bug, MessageSquare, ExternalLink, Shield, Smartphone, FileText, Copy, Check, CreditCard, X, Info } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Phone, Search, MapPin, Calendar, Clock, User, Building2, Send, Bug, MessageSquare, ExternalLink, Shield, Smartphone, FileText, Copy, Check, CreditCard, X, Info, Map } from 'lucide-react';
 import { ScreenView } from '../types';
+import { InheritanceCalculatorView } from './InheritanceCalculator/InheritanceCalculatorView';
+import { Religion } from './InheritanceCalculator/types';
 
 interface ServiceViewsProps {
   currentView: ScreenView;
   onBack: () => void;
   onNavigate: (view: ScreenView) => void;
+  initialReligion?: Religion;
 }
 
 export const ServiceViews: React.FC<ServiceViewsProps> = ({
   currentView,
   onBack,
   onNavigate,
+  initialReligion,
 }) => {
+  if (currentView === 'inheritance_calculator') {
+    return <InheritanceCalculatorView onBack={onBack} initialReligion={initialReligion} />;
+  }
+
   const [submitted, setSubmitted] = useState(false);
   const [submittedId, setSubmittedId] = useState('OB-003');
   const [generatedWhatsAppUrl, setGeneratedWhatsAppUrl] = useState('');
@@ -31,6 +39,8 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
     upazila: '',
     mouza: '',
     jlNo: '',
+    sheetNo: '',
+    mapType: '',
     halDaag: '',
     sabekDaag: '',
     reportNo: '',
@@ -130,13 +140,22 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
           `ঠিকানা: ${formData.address || 'উল্লেখ নেই'}`,
           `WhatsApp নম্বর: ${formData.phone || 'উল্লেখ নেই'}`,
           `সমস্যার বিবরণ: ${formData.issueDesc || 'উল্লেখ নেই'}`,
-          formData.district ? `জেলা: ${formData.district}` : null,
-          formData.upazila ? `উপজেলা: ${formData.upazila}` : null,
-          formData.mouza ? `মৌজা: ${formData.mouza}` : null,
-          formData.jlNo ? `জে.এল নং: ${formData.jlNo}` : null,
-          formData.halDaag ? `হাল দাগ: ${formData.halDaag}` : null,
-          formData.sabekDaag ? `সাবেক দাগ: ${formData.sabekDaag}` : null,
-        ].filter(Boolean);
+        ];
+        return lines.join('\n');
+      }
+
+      case 'mouza_map': {
+        const lines = [
+          '*মৌজা ম্যাপ উত্তোলন আবেদন*',
+          `নাম: ${formData.name || 'উল্লেখ নেই'}`,
+          `জেলা: ${formData.district || 'উল্লেখ নেই'}`,
+          `উপজেলা: ${formData.upazila || 'উল্লেখ নেই'}`,
+          `মৌজা: ${formData.mouza || 'উল্লেখ নেই'}`,
+          `জে.এল নং: ${formData.jlNo || 'উল্লেখ নেই'}`,
+          `সিট নম্বর: ${formData.sheetNo || 'উল্লেখ নেই'}`,
+          `নকশা ধরন: ${formData.mapType || 'উল্লেখ নেই'}`,
+          `ট্রানজেকশন আইডি: ${formData.trxId || 'উল্লেখ নেই'}`,
+        ];
         return lines.join('\n');
       }
 
@@ -1031,91 +1050,6 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
 
                 <div>
                   <label className="block text-xs font-bold text-gray-800 mb-1">
-                    জেলা
-                  </label>
-                  <input
-                    type="text"
-                    autoComplete="off"
-                    placeholder="জেলার নাম লিখুন"
-                    value={formData.district}
-                    onChange={(e) => setFormData({ ...formData, district: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:border-[#0A2540] outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-gray-800 mb-1">
-                    উপজেলা
-                  </label>
-                  <input
-                    type="text"
-                    autoComplete="off"
-                    placeholder="উপজেলার নাম লিখুন"
-                    value={formData.upazila}
-                    onChange={(e) => setFormData({ ...formData, upazila: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:border-[#0A2540] outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-gray-800 mb-1">
-                    মৌজা
-                  </label>
-                  <input
-                    type="text"
-                    autoComplete="off"
-                    placeholder="মৌজার নাম লিখুন"
-                    value={formData.mouza}
-                    onChange={(e) => setFormData({ ...formData, mouza: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:border-[#0A2540] outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-gray-800 mb-1">
-                    জে.এল নং
-                  </label>
-                  <input
-                    type="text"
-                    autoComplete="off"
-                    placeholder="জে.এল নম্বর লিখুন"
-                    value={formData.jlNo}
-                    onChange={(e) => setFormData({ ...formData, jlNo: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:border-[#0A2540] outline-none"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-bold text-gray-800 mb-1">
-                      সাবেক দাগ
-                    </label>
-                    <input
-                      type="text"
-                      autoComplete="off"
-                      placeholder="সাবেক দাগ নম্বর লিখুন"
-                      value={formData.sabekDaag}
-                      onChange={(e) => setFormData({ ...formData, sabekDaag: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:border-[#0A2540] outline-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-gray-800 mb-1">
-                      হাল দাগ
-                    </label>
-                    <input
-                      type="text"
-                      autoComplete="off"
-                      placeholder="হাল দাগ নম্বর লিখুন"
-                      value={formData.halDaag}
-                      onChange={(e) => setFormData({ ...formData, halDaag: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:border-[#0A2540] outline-none"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-gray-800 mb-1">
                     ঠিকানা <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -1176,6 +1110,248 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
                   পরামর্শ ফি প্রদান করতে হবে
                 </span>
               </div>
+            </div>
+          )}
+
+          {/* SCREEN 7: মৌজা ম্যাপ উত্তোলন ফর্ম */}
+          {currentView === 'mouza_map' && (
+            <div>
+              <div className="flex flex-col items-center text-center my-3">
+                <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-[#0A2540] mb-2 shadow-2xs">
+                  <Map size={24} className="text-[#0A2540]" />
+                </div>
+                <h2 className="text-lg font-bold text-gray-900">মৌজা ম্যাপ উত্তোলন</h2>
+                <p className="text-xs text-gray-600 max-w-xs mt-0.5">
+                  সিএস / আরএস / ডিয়ারা / এসএ মৌজা নকশা উত্তোলনের আবেদন করুন
+                </p>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-3.5 mt-4" autoComplete="off">
+                {/* ১. নাম */}
+                <div>
+                  <label className="block text-xs font-bold text-gray-800 mb-1">
+                    নাম <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    autoComplete="off"
+                    placeholder="আপনার নাম লিখুন"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:border-[#0A2540] outline-none"
+                  />
+                </div>
+
+                {/* ২. জেলা */}
+                <div>
+                  <label className="block text-xs font-bold text-gray-800 mb-1">
+                    জেলা <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    autoComplete="off"
+                    placeholder="জেলার নাম লিখুন"
+                    value={formData.district}
+                    onChange={(e) => setFormData({ ...formData, district: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:border-[#0A2540] outline-none"
+                  />
+                </div>
+
+                {/* ৩. উপজেলা */}
+                <div>
+                  <label className="block text-xs font-bold text-gray-800 mb-1">
+                    উপজেলা <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    autoComplete="off"
+                    placeholder="উপজেলার নাম লিখুন"
+                    value={formData.upazila}
+                    onChange={(e) => setFormData({ ...formData, upazila: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:border-[#0A2540] outline-none"
+                  />
+                </div>
+
+                {/* ৪. মৌজা */}
+                <div>
+                  <label className="block text-xs font-bold text-gray-800 mb-1">
+                    মৌজা <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    autoComplete="off"
+                    placeholder="মৌজার নাম লিখুন"
+                    value={formData.mouza}
+                    onChange={(e) => setFormData({ ...formData, mouza: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:border-[#0A2540] outline-none"
+                  />
+                </div>
+
+                {/* ৫. জে.এল নং */}
+                <div>
+                  <label className="block text-xs font-bold text-gray-800 mb-1">
+                    জে.এল নং <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    autoComplete="off"
+                    placeholder="জে.এল নম্বর লিখুন"
+                    value={formData.jlNo}
+                    onChange={(e) => setFormData({ ...formData, jlNo: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:border-[#0A2540] outline-none"
+                  />
+                </div>
+
+                {/* ৬. সিট নম্বর */}
+                <div>
+                  <label className="block text-xs font-bold text-gray-800 mb-1">
+                    সিট নম্বর <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    autoComplete="off"
+                    placeholder="সিট নম্বর লিখুন (যেমন: ১, ২ বা উল্লেখ নেই)"
+                    value={formData.sheetNo}
+                    onChange={(e) => setFormData({ ...formData, sheetNo: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:border-[#0A2540] outline-none"
+                  />
+                </div>
+
+                {/* ৭. নকশা ধরন */}
+                <div>
+                  <label className="block text-xs font-bold text-gray-800 mb-1">
+                    নকশা ধরন <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    autoComplete="off"
+                    placeholder="যেমন: সি.এস / আর.এস / ডিয়ারা"
+                    value={formData.mapType}
+                    onChange={(e) => setFormData({ ...formData, mapType: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:border-[#0A2540] outline-none"
+                  />
+                </div>
+
+                {/* ৮. ট্রানজেকশন আইডি */}
+                <div>
+                  <label className="block text-xs font-bold text-gray-800 mb-1">
+                    ট্রানজেকশন আইডি <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    autoComplete="off"
+                    id="mouza-map-trxid-input"
+                    placeholder="bKash TrxID লিখুন (যেমন: BKL28049)"
+                    value={formData.trxId}
+                    onChange={(e) => setFormData({ ...formData, trxId: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:border-[#0A2540] outline-none font-mono uppercase tracking-wider"
+                  />
+                </div>
+
+                {/* পেমেন্ট করুন বাটন (সাবমিট বাটনের আগে) */}
+                <div className="pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setShowPaymentModal(true)}
+                    id="btn-mouza-map-payment-open"
+                    className="w-full py-2.5 px-4 bg-gradient-to-r from-pink-50 to-pink-100/70 hover:from-pink-100 hover:to-pink-200/80 text-[#D12053] border border-pink-300 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-2xs active:scale-[0.99]"
+                  >
+                    <CreditCard size={16} className="text-[#E2136E]" />
+                    <span>পেমেন্ট করুন (bKash: 01635700386)</span>
+                  </button>
+                </div>
+
+                {/* বিকাশ পেমেন্ট মডাল */}
+                {showPaymentModal && (
+                  <div className="p-4 bg-white border-2 border-[#E2136E]/40 rounded-2xl shadow-sm animate-in fade-in duration-200">
+                    <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-pink-100">
+                      <div className="flex items-center gap-1.5">
+                        <span className="px-2 py-0.5 rounded bg-[#E2136E] text-white text-[11px] font-bold">
+                          bKash
+                        </span>
+                        <span className="text-xs font-bold text-gray-900">
+                          বিকাশ পেমেন্ট বিবরণ
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setShowPaymentModal(false)}
+                        className="text-gray-400 hover:text-gray-600 p-1 cursor-pointer"
+                        title="বন্ধ করুন"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+
+                    <div className="space-y-2.5">
+                      <div className="flex items-center justify-between bg-pink-50/70 p-2.5 rounded-xl border border-pink-200">
+                        <div>
+                          <span className="text-[11px] text-gray-500 block">bKash নম্বর (Personal)</span>
+                          <span className="text-sm font-mono font-bold text-[#E2136E] tracking-wider">
+                            01635700386
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={copyBkashNumber}
+                          className="px-2.5 py-1.5 bg-white hover:bg-pink-100 text-xs font-bold text-[#E2136E] border border-pink-300 rounded-lg flex items-center gap-1 cursor-pointer transition-colors shadow-2xs"
+                        >
+                          {bkashCopied ? (
+                            <>
+                              <Check size={13} className="text-emerald-600" />
+                              <span className="text-emerald-600">কপি হয়েছে!</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy size={13} />
+                              <span>কপি করুন</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+
+                      <div className="text-[11px] text-gray-700 bg-amber-50 p-2.5 rounded-xl border border-amber-200 leading-relaxed">
+                        <p className="font-semibold text-amber-950 mb-0.5">নির্দেশনা:</p>
+                        <p>
+                          এই নম্বরে Send Money করুন, তারপর Transaction ID উপরের বক্সে লিখে আবেদন জমা দিন বাটনে ক্লিক করুন।
+                        </p>
+                      </div>
+
+                      <div className="flex items-center justify-end text-xs px-1 text-gray-600">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowPaymentModal(false);
+                            const el = document.getElementById('mouza-map-trxid-input');
+                            if (el) el.focus();
+                          }}
+                          className="text-[11px] font-bold text-[#0A2540] hover:underline cursor-pointer"
+                        >
+                          বুঝেছি, TrxID লিখুন →
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* সাবমিট বাটন */}
+                <button
+                  type="submit"
+                  id="btn-mouza-map-submit"
+                  className="w-full py-3 bg-[#0A2540] hover:bg-[#12365A] active:scale-[0.99] text-white font-bold text-sm rounded-xl shadow-xs transition-all cursor-pointer mt-4 flex items-center justify-center gap-2"
+                >
+                  <Map size={16} />
+                  <span>আবেদন জমা দিন</span>
+                </button>
+              </form>
             </div>
           )}
 

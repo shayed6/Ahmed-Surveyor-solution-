@@ -3,7 +3,7 @@ import { ChevronRight } from 'lucide-react';
 import { ScreenView } from '../types';
 
 interface ServiceCardsProps {
-  onSelectService: (view: ScreenView) => void;
+  onSelectService: (view: ScreenView, initialReligion?: 'muslim' | 'hindu') => void;
 }
 
 export const ServiceCards: React.FC<ServiceCardsProps> = ({ onSelectService }) => {
@@ -15,11 +15,11 @@ export const ServiceCards: React.FC<ServiceCardsProps> = ({ onSelectService }) =
           <span>আমাদের সেবা সমূহ</span>
         </h2>
         <span className="text-[11px] font-semibold text-[#AA771C] bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200/50">
-          ৬টি সার্ভিস
+          ৭টি সেবা ও ফ্রি টুল
         </span>
       </div>
 
-      {/* Grid of 6 Services: 2x3 Grid */}
+      {/* Grid of Services: 2x3 Grid + Featured Calculator */}
       <div className="grid grid-cols-2 gap-3">
         {/* 1. ভূমি পরিমাপ */}
         <button
@@ -172,11 +172,11 @@ export const ServiceCards: React.FC<ServiceCardsProps> = ({ onSelectService }) =
         <button
           id="service-btn-open-booking"
           onClick={() => onSelectService('open_booking')}
-          className="col-span-2 bg-white border border-gray-200 hover:border-[#AA771C] rounded-xl p-3.5 flex items-center justify-between text-left transition-all duration-150 hover:shadow-md active:scale-[0.98] group relative cursor-pointer"
+          className="bg-white border border-gray-200 hover:border-[#AA771C] rounded-xl p-3.5 flex flex-col justify-between text-left transition-all duration-150 hover:shadow-md active:scale-[0.98] group relative cursor-pointer"
         >
-          <div className="flex items-center gap-3">
+          <div className="flex items-start justify-between w-full mb-2">
             {/* Custom Chat & Consultation Icon */}
-            <div className="w-10 h-10 rounded-xl bg-amber-50/70 border border-amber-200/60 flex items-center justify-center text-[#0A2540] group-hover:bg-amber-100/70 transition-colors shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-amber-50/70 border border-amber-200/60 flex items-center justify-center text-[#0A2540] group-hover:bg-amber-100/70 transition-colors">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" className="stroke-[#0A2540]" />
                 <circle cx="8" cy="10" r="1" fill="#AA771C" />
@@ -184,18 +184,115 @@ export const ServiceCards: React.FC<ServiceCardsProps> = ({ onSelectService }) =
                 <circle cx="16" cy="10" r="1" fill="#AA771C" />
               </svg>
             </div>
+            <ChevronRight size={18} className="text-gray-400 group-hover:text-[#0A2540] group-hover:translate-x-0.5 transition-all" />
+          </div>
+
+          <div>
+            <h3 className="text-sm font-bold text-black group-hover:text-[#0A2540] transition-colors">
+              ওপেন বুকিং
+            </h3>
+            <p className="text-[11px] text-gray-700 leading-snug mt-0.5 font-medium">
+              সরাসরি সার্ভে বিষয়ে পরামর্শ নিন
+            </p>
+          </div>
+        </button>
+
+        {/* 7. মৌজা ম্যাপ উত্তোলন */}
+        <button
+          id="service-btn-mouza-map"
+          onClick={() => onSelectService('mouza_map')}
+          className="col-span-2 bg-white border border-gray-200 hover:border-[#AA771C] rounded-xl p-3.5 flex items-center justify-between text-left transition-all duration-150 hover:shadow-md active:scale-[0.98] group relative cursor-pointer"
+        >
+          <div className="flex items-center gap-3">
+            {/* Custom Mouza Map Icon */}
+            <div className="w-10 h-10 rounded-xl bg-amber-50/70 border border-amber-200/60 flex items-center justify-center text-[#0A2540] group-hover:bg-amber-100/70 transition-colors shrink-0">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" className="stroke-[#0A2540]" fill="rgba(254, 243, 199, 0.4)" />
+                <line x1="9" y1="3" x2="9" y2="18" className="stroke-[#AA771C]" strokeWidth="1.5" />
+                <line x1="15" y1="6" x2="15" y2="21" className="stroke-[#AA771C]" strokeWidth="1.5" />
+                <circle cx="12" cy="12" r="2" fill="#0A2540" />
+              </svg>
+            </div>
             <div>
-              <h3 className="text-sm font-bold text-black group-hover:text-[#0A2540] transition-colors">
-                ওপেন বুকিং
-              </h3>
+              <div className="flex items-center gap-2">
+                <h3 className="text-sm font-bold text-black group-hover:text-[#0A2540] transition-colors">
+                  মৌজা ম্যাপ উত্তোলন
+                </h3>
+                <span className="text-[10px] font-semibold text-[#AA771C] bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200/50">
+                  নকশা সার্ভিস
+                </span>
+              </div>
               <p className="text-[11px] text-gray-700 leading-snug mt-0.5 font-medium">
-                যে কোনো সার্ভে বিষয়ে সরাসরি পরামর্শ নিন
+                সি.এস / আর.এস / ডিয়ারা মৌজা নকশা সংগ্রহ করুন
               </p>
             </div>
           </div>
 
           <ChevronRight size={18} className="text-gray-400 group-hover:text-[#0A2540] group-hover:translate-x-0.5 transition-all shrink-0" />
         </button>
+
+        {/* 8. উত্তরাধিকার ক্যালকুলেটর (ফ্রি ক্যালকুলেশন টুল) */}
+        <div
+          id="service-card-inheritance-calculator"
+          className="col-span-2 bg-gradient-to-br from-white via-amber-50/30 to-white border-2 border-amber-300/90 hover:border-[#0A2540] rounded-2xl p-4 transition-all duration-200 shadow-2xs hover:shadow-md relative group"
+        >
+          <div className="flex items-start justify-between gap-3 mb-2.5">
+            <div className="flex items-center gap-2.5">
+              {/* Scale / Balance Icon */}
+              <div className="w-11 h-11 rounded-xl bg-amber-100/70 border border-amber-300 flex items-center justify-center text-[#0A2540] shrink-0 group-hover:bg-amber-200/80 transition-colors">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 3v18" className="stroke-[#0A2540]" strokeWidth="2" />
+                  <path d="M5 6h14" className="stroke-[#AA771C]" strokeWidth="2" />
+                  <path d="m3 11 2-5 2 5a3 3 0 0 1-4 0Z" className="stroke-[#0A2540] fill-amber-100" />
+                  <path d="m17 11 2-5 2 5a3 3 0 0 1-4 0Z" className="stroke-[#0A2540] fill-amber-100" />
+                  <path d="M8 21h8" className="stroke-[#0A2540]" strokeWidth="2" />
+                </svg>
+              </div>
+              <div>
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <h3 className="text-sm font-bold text-[#0A2540]">
+                    উত্তরাধিকার ক্যালকুলেটর
+                  </h3>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                    ফ্রি টুল
+                  </span>
+                </div>
+                <p className="text-[11px] text-gray-600 mt-0.5 leading-snug">
+                  মুসলিম ফারায়েজ ও হিন্দু দায়ভাগ আইনানুযায়ী সম্পত্তি বণ্টন
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => onSelectService('inheritance_calculator', 'muslim')}
+              className="text-xs font-bold text-[#0A2540] hover:text-[#AA771C] flex items-center gap-0.5 shrink-0 cursor-pointer pt-1"
+            >
+              <span>ওপেন</span>
+              <ChevronRight size={16} />
+            </button>
+          </div>
+
+          {/* Option Selector Buttons: মুসলিম ও হিন্দু */}
+          <div className="grid grid-cols-2 gap-2 mt-3 pt-2.5 border-t border-amber-200/60">
+            <button
+              type="button"
+              id="btn-quick-calc-muslim"
+              onClick={() => onSelectService('inheritance_calculator', 'muslim')}
+              className="py-2 px-3 bg-white hover:bg-emerald-50 text-[#0A2540] hover:text-emerald-900 border border-gray-200 hover:border-emerald-300 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-2xs active:scale-[0.98] cursor-pointer"
+            >
+              <span>☪️ মুসলিম (ফারায়েজ)</span>
+            </button>
+            <button
+              type="button"
+              id="btn-quick-calc-hindu"
+              onClick={() => onSelectService('inheritance_calculator', 'hindu')}
+              className="py-2 px-3 bg-white hover:bg-amber-50 text-[#0A2540] hover:text-amber-900 border border-gray-200 hover:border-amber-300 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-2xs active:scale-[0.98] cursor-pointer"
+            >
+              <span>🕉️ হিন্দু (দায়ভাগ)</span>
+            </button>
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, X, Phone, MessageSquare, Compass, FileText, CheckCircle2, ShieldCheck, Sparkles, MapPin, Smartphone, Shield, HelpCircle } from 'lucide-react';
+import { Menu, X, Phone, MessageSquare, Compass, FileText, CheckCircle2, ShieldCheck, Sparkles, MapPin, Smartphone, Shield, HelpCircle, Scale, Map } from 'lucide-react';
 import { AhmedLogo } from './AhmedLogo';
 import { ScreenView } from '../types';
 
@@ -154,6 +154,42 @@ export const Header: React.FC<HeaderProps> = ({
                 >
                   <MessageSquare size={16} className="text-[#0A2540]" />
                   <span>ওপেন বুকিং</span>
+                </button>
+
+                <button
+                  id="drawer-mouza-map-btn"
+                  onClick={() => handleNavClick('mouza_map')}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors text-left cursor-pointer ${
+                    currentView === 'mouza_map'
+                      ? 'bg-amber-50 text-[#0A2540] font-bold border border-amber-200'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Map size={16} className="text-[#0A2540]" />
+                    <span>মৌজা ম্যাপ উত্তোলন</span>
+                  </div>
+                  <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-200">
+                    নকশা
+                  </span>
+                </button>
+
+                <button
+                  id="drawer-inheritance-calc-btn"
+                  onClick={() => handleNavClick('inheritance_calculator')}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors text-left cursor-pointer ${
+                    currentView === 'inheritance_calculator'
+                      ? 'bg-amber-50 text-[#0A2540] font-bold border border-amber-200'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Scale size={16} className="text-[#AA771C]" />
+                    <span>উত্তরাধিকার ক্যালকুলেটর</span>
+                  </div>
+                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800">
+                    ফ্রি
+                  </span>
                 </button>
 
                 <div className="px-3 pt-3 pb-1 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
