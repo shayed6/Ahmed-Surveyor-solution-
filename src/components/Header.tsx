@@ -192,21 +192,6 @@ export const Header: React.FC<HeaderProps> = ({
                   </span>
                 </button>
 
-                <div className="px-3 pt-3 pb-1 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                  অন্যান্য সুবিধা
-                </div>
-
-                <button
-                  onClick={() => {
-                    setMenuOpen(false);
-                    onReplaySplash();
-                  }}
-                  className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-amber-800 bg-amber-50 hover:bg-amber-100 text-left cursor-pointer"
-                >
-                  <Sparkles size={16} className="text-amber-600" />
-                  <span>স্প্ল্যাশ স্ক্রিন দেখুন</span>
-                </button>
-
                 {/* Divider Line before Policy & Contact */}
                 <hr className="my-2 border-gray-200" />
 

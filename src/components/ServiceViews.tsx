@@ -1032,7 +1032,7 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
                 </p>
               </div>
 
-              <form onSubmit={(e) => handleSubmit(e, 'OB-003')} className="space-y-3.5 mt-4" autoComplete="off">
+              <form onSubmit={handleSubmit} className="space-y-3.5 mt-4" autoComplete="off">
                 <div>
                   <label className="block text-xs font-bold text-gray-800 mb-1">
                     নাম <span className="text-red-500">*</span>
@@ -1094,22 +1094,91 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
 
                 <button
                   type="submit"
+                  id="btn-open-booking-submit"
                   className="w-full py-3 bg-[#0A2540] hover:bg-[#12365A] text-white font-bold text-sm rounded-xl shadow-xs transition-all cursor-pointer mt-4"
                 >
-                  সিরিয়াল দিন
+                  আবেদন জমা দিন
                 </button>
               </form>
 
-              {/* Display Box as shown in Screen 6 */}
-              <div className="mt-5 p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-center">
-                <span className="text-xs text-gray-600 block">আপনার সিরিয়াল নম্বর:</span>
-                <span className="text-2xl font-bold font-mono text-[#0A2540] tracking-wider block my-0.5">
-                  OB-003
-                </span>
-                <span className="inline-block mt-1 px-3 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
-                  পরামর্শ ফি প্রদান করতে হবে
-                </span>
+              {/* পরামর্শ ফি প্রদান করতে হবে অপশন */}
+              <div className="mt-5 p-4 rounded-2xl bg-amber-50/80 border border-amber-300 text-center shadow-xs">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 border border-amber-300 text-amber-950 font-bold text-sm mb-2">
+                  <Info size={15} className="text-[#AA771C]" />
+                  <span>পরামর্শ ফি প্রদান করতে হবে</span>
+                </div>
+                <p className="text-xs text-gray-700 leading-relaxed max-w-xs mx-auto mb-3">
+                  সার্ভে বিষয়ক বিস্তারিত ও তাৎক্ষণিক পরামর্শের জন্য নির্ধারিত ফি প্রযোজ্য।
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setShowPaymentModal(true)}
+                  id="btn-open-booking-payment"
+                  className="w-full py-2.5 px-4 bg-white hover:bg-pink-50 text-[#D12053] border border-pink-300 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-2xs active:scale-[0.99]"
+                >
+                  <CreditCard size={15} className="text-[#E2136E]" />
+                  <span>পেমেন্ট করুন (bKash: 01635700386)</span>
+                </button>
               </div>
+
+              {/* বিকাশ পেমেন্ট মডাল */}
+              {showPaymentModal && (
+                <div className="mt-3 p-4 bg-white border-2 border-[#E2136E]/40 rounded-2xl shadow-sm animate-in fade-in duration-200">
+                  <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-pink-100">
+                    <div className="flex items-center gap-1.5">
+                      <span className="px-2 py-0.5 rounded bg-[#E2136E] text-white text-[11px] font-bold">
+                        bKash
+                      </span>
+                      <span className="text-xs font-bold text-gray-900">
+                        বিকাশ পেমেন্ট বিবরণ
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setShowPaymentModal(false)}
+                      className="text-gray-400 hover:text-gray-600 p-1 cursor-pointer"
+                      title="বন্ধ করুন"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+
+                  <div className="space-y-2.5 text-left">
+                    <div className="flex items-center justify-between bg-pink-50/70 p-2.5 rounded-xl border border-pink-200">
+                      <div>
+                        <span className="text-[11px] text-gray-500 block">bKash নম্বর (Personal)</span>
+                        <span className="text-sm font-mono font-bold text-[#E2136E] tracking-wider">
+                          01635700386
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={copyBkashNumber}
+                        className="px-2.5 py-1.5 bg-white hover:bg-pink-100 text-xs font-bold text-[#E2136E] border border-pink-300 rounded-lg flex items-center gap-1 cursor-pointer transition-colors shadow-2xs"
+                      >
+                        {bkashCopied ? (
+                          <>
+                            <Check size={13} className="text-emerald-600" />
+                            <span className="text-emerald-600">কপি হয়েছে!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy size={13} />
+                            <span>কপি করুন</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+
+                    <div className="text-[11px] text-gray-700 bg-amber-50 p-2.5 rounded-xl border border-amber-200 leading-relaxed">
+                      <p className="font-semibold text-amber-950 mb-0.5">নির্দেশনা:</p>
+                      <p>
+                        এই নম্বরে Send Money করুন। পরামর্শ ফি সংক্রান্ত যে কোনো তথ্যের জন্য WhatsApp-এ মেসেজ দিন।
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
