@@ -12,6 +12,151 @@ interface ServiceViewsProps {
   initialReligion?: Religion;
 }
 
+interface BkashPaymentSectionProps {
+  idPrefix: string;
+  trxId: string;
+  onTrxIdChange: (val: string) => void;
+  feeText?: string;
+  instructionText?: string;
+  isOpen: boolean;
+  onToggle: () => void;
+  onClose: () => void;
+  bkashCopied: boolean;
+  onCopyBkash: () => void;
+}
+
+const BkashPaymentSection: React.FC<BkashPaymentSectionProps> = ({
+  idPrefix,
+  trxId,
+  onTrxIdChange,
+  feeText,
+  instructionText = 'এই নম্বরে Send Money করুন, তারপর Transaction ID উপরের বক্সে লিখে আবেদন বাটনে ক্লিক করুন।',
+  isOpen,
+  onToggle,
+  onClose,
+  bkashCopied,
+  onCopyBkash,
+}) => {
+  return (
+    <div className="space-y-2 pt-1">
+      {/* ট্রানজেকশন আইডি ফিল্ড (ঐচ্ছিক) */}
+      <div>
+        <div className="flex items-center justify-between mb-1">
+          <label className="block text-xs font-bold text-gray-800">
+            ট্রানজেকশন আইডি <span className="text-gray-400 font-normal text-[11px]">(ঐচ্ছিক / Optional)</span>
+          </label>
+          {feeText && (
+            <span className="text-[11px] text-pink-700 font-semibold">
+              {feeText}
+            </span>
+          )}
+        </div>
+        <input
+          type="text"
+          autoComplete="off"
+          id={`${idPrefix}-trxid-input`}
+          placeholder="bKash TrxID লিখুন (যদি পেমেন্ট করে থাকেন - ঐচ্ছিক)"
+          value={trxId}
+          onChange={(e) => onTrxIdChange(e.target.value)}
+          className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:border-[#0A2540] outline-none font-mono uppercase tracking-wider"
+        />
+        <p className="text-[10px] text-gray-500 mt-1">
+          পেমেন্ট সম্পন্ন করে থাকলে TrxID দিন। এটি বাধ্যতামূলক নয়, খালি রেখেও আবেদন পাঠাতে পারেন।
+        </p>
+      </div>
+
+      {/* পেমেন্ট করুন বাটন */}
+      <div>
+        <button
+          type="button"
+          onClick={onToggle}
+          id={`btn-${idPrefix}-payment-open`}
+          className="w-full py-2.5 px-4 bg-gradient-to-r from-pink-50 to-pink-100/70 hover:from-pink-100 hover:to-pink-200/80 text-[#D12053] border border-pink-300 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-2xs active:scale-[0.99]"
+        >
+          <CreditCard size={16} className="text-[#E2136E]" />
+          <span>পেমেন্ট করুন (bKash: 01635700386)</span>
+        </button>
+      </div>
+
+      {/* বিকাশ পেমেন্ট বিবরণ বক্স */}
+      {isOpen && (
+        <div className="p-4 bg-white border-2 border-[#E2136E]/40 rounded-2xl shadow-sm animate-in fade-in duration-200">
+          <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-pink-100">
+            <div className="flex items-center gap-1.5">
+              <span className="px-2 py-0.5 rounded bg-[#E2136E] text-white text-[11px] font-bold">
+                bKash
+              </span>
+              <span className="text-xs font-bold text-gray-900">
+                বিকাশ পেমেন্ট বিবরণ
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={onClose}
+              className="text-gray-400 hover:text-gray-600 p-1 cursor-pointer"
+              title="বন্ধ করুন"
+            >
+              <X size={16} />
+            </button>
+          </div>
+
+          <div className="space-y-2.5">
+            <div className="flex items-center justify-between bg-pink-50/70 p-2.5 rounded-xl border border-pink-200">
+              <div>
+                <span className="text-[11px] text-gray-500 block">bKash নম্বর (Personal)</span>
+                <span className="text-sm font-mono font-bold text-[#E2136E] tracking-wider">
+                  01635700386
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={onCopyBkash}
+                className="px-2.5 py-1.5 bg-white hover:bg-pink-100 text-xs font-bold text-[#E2136E] border border-pink-300 rounded-lg flex items-center gap-1 cursor-pointer transition-colors shadow-2xs"
+              >
+                {bkashCopied ? (
+                  <>
+                    <Check size={13} className="text-emerald-600" />
+                    <span className="text-emerald-600">কপি হয়েছে!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy size={13} />
+                    <span>কপি করুন</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            <div className="text-[11px] text-gray-700 bg-amber-50 p-2.5 rounded-xl border border-amber-200 leading-relaxed">
+              <p className="font-semibold text-amber-950 mb-0.5">নির্দেশনা:</p>
+              <p>{instructionText}</p>
+            </div>
+
+            <div className="flex items-center justify-between text-xs px-1 text-gray-600">
+              {feeText ? (
+                <span>ফি: <strong className="text-gray-900 font-medium">{feeText.replace(/^ফি:\s*/, '')}</strong></span>
+              ) : (
+                <span />
+              )}
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  const el = document.getElementById(`${idPrefix}-trxid-input`);
+                  if (el) el.focus();
+                }}
+                className="text-[11px] font-bold text-[#0A2540] hover:underline cursor-pointer"
+              >
+                বুঝেছি, TrxID লিখুন →
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 export const ServiceViews: React.FC<ServiceViewsProps> = ({
   currentView,
   onBack,
@@ -70,7 +215,8 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
           `ফোন: ${formData.phone || 'উল্লেখ নেই'}`,
           `ঠিকানা: ${formData.address || 'উল্লেখ নেই'}`,
           `তারিখ: ${formData.date || 'উল্লেখ নেই'}`,
-        ];
+          formData.trxId ? `ট্রানজেকশন আইডি: ${formData.trxId}` : null,
+        ].filter(Boolean);
         return lines.join('\n');
       }
 
@@ -78,14 +224,15 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
         const lines = [
           '*নতুন প্যান্টাগ্রাফ আবেদন*',
           'সার্ভিস: প্যান্টাগ্রাফ তৈরি',
+          `নাম: ${formData.name || 'উল্লেখ নেই'}`,
+          `ফোন / WhatsApp: ${formData.phone || 'উল্লেখ নেই'}`,
           `জেলা: ${formData.district || 'উল্লেখ নেই'}`,
           `উপজেলা: ${formData.upazila || 'উল্লেখ নেই'}`,
           `মৌজা: ${formData.mouza || 'উল্লেখ নেই'}`,
-          `হাল দাগ: ${formData.halDaag || 'উল্লেখ নেই'}`,
-          `সাবেক দাগ: ${formData.sabekDaag || 'উল্লেখ নেই'}`,
           formData.jlNo ? `জে.এল নং: ${formData.jlNo}` : null,
-          formData.name ? `নাম: ${formData.name}` : null,
-          formData.phone ? `ফোন / WhatsApp: ${formData.phone}` : null,
+          `সাবেক দাগ: ${formData.sabekDaag || 'উল্লেখ নেই'}`,
+          `হাল দাগ: ${formData.halDaag || 'উল্লেখ নেই'}`,
+          formData.trxId ? `ট্রানজেকশন আইডি: ${formData.trxId}` : null,
         ].filter(Boolean);
         return lines.join('\n');
       }
@@ -97,7 +244,7 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
           `মৌজা: ${formData.mouza || 'উল্লেখ নেই'}`,
           `রিপোর্ট নম্বর: ${formData.reportNo || 'উল্লেখ নেই'}`,
           `WhatsApp নম্বর: ${formData.phone || 'উল্লেখ নেই'}`,
-          `ট্রানজেকশন আইডি: ${formData.trxId || 'উল্লেখ নেই'}`,
+          `ট্রানজেকশন আইডি: ${formData.trxId ? formData.trxId : 'প্রযোজ্য নয় (ঐচ্ছিক)'}`,
         ];
         return lines.join('\n');
       }
@@ -105,14 +252,15 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
       case 'deed_search': {
         const lines = [
           '*নতুন দলিল উত্তোলন আবেদন*',
-          'সার্ভিস: দলিল অনুসন্ধান',
+          'সার্ভিস: দলিল উত্তোলন',
           `রেজিস্ট্রেশন তারিখ: ${formData.deedDate || 'উল্লেখ নেই'}`,
+          formData.deedNo ? `দলিল নম্বর: ${formData.deedNo}` : null,
           `দাতা: ${formData.dataName || 'উল্লেখ নেই'}`,
           `গ্রহিতা: ${formData.grohitaName || 'উল্লেখ নেই'}`,
           `জমির পরিমাণ: ${formData.landAmount || 'উল্লেখ নেই'}`,
           `রেজিস্ট্রি অফিস: ${formData.registryOffice || 'উল্লেখ নেই'}`,
-          formData.deedNo ? `দলিল নম্বর: ${formData.deedNo}` : null,
           formData.phone ? `WhatsApp নম্বর: ${formData.phone}` : null,
+          formData.trxId ? `ট্রানজেকশন আইডি: ${formData.trxId}` : null,
         ].filter(Boolean);
         return lines.join('\n');
       }
@@ -129,6 +277,7 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
           `খতিয়ান নাম্বার: ${formData.khatianNo || 'উল্লেখ নেই'}`,
           formData.daagNo ? `দাগ নাম্বার: ${formData.daagNo}` : null,
           `WhatsApp নম্বর: ${formData.phone || 'উল্লেখ নেই'}`,
+          formData.trxId ? `ট্রানজেকশন আইডি: ${formData.trxId}` : null,
         ].filter(Boolean);
         return lines.join('\n');
       }
@@ -141,7 +290,8 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
           `ঠিকানা: ${formData.address || 'উল্লেখ নেই'}`,
           `WhatsApp নম্বর: ${formData.phone || 'উল্লেখ নেই'}`,
           `সমস্যার বিবরণ: ${formData.issueDesc || 'উল্লেখ নেই'}`,
-        ];
+          formData.trxId ? `ট্রানজেকশন আইডি: ${formData.trxId}` : null,
+        ].filter(Boolean);
         return lines.join('\n');
       }
 
@@ -155,7 +305,7 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
           `জে.এল নং: ${formData.jlNo || 'উল্লেখ নেই'}`,
           `সিট নম্বর: ${formData.sheetNo || 'উল্লেখ নেই'}`,
           `নকশা ধরন: ${formData.mapType || 'উল্লেখ নেই'}`,
-          `ট্রানজেকশন আইডি: ${formData.trxId || 'উল্লেখ নেই'}`,
+          `ট্রানজেকশন আইডি: ${formData.trxId ? formData.trxId : 'প্রযোজ্য নয় (ঐচ্ছিক)'}`,
         ];
         return lines.join('\n');
       }
@@ -388,6 +538,20 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
                   />
                 </div>
 
+                {/* bKash Payment & TrxID */}
+                <BkashPaymentSection
+                  idPrefix="land-survey"
+                  trxId={formData.trxId}
+                  onTrxIdChange={(val) => setFormData({ ...formData, trxId: val })}
+                  feeText="ফি: আলোচনা সাপেক্ষে"
+                  instructionText="এই নম্বরে Send Money করুন, তারপর Transaction ID উপরের বক্সে লিখে আবেদন করুন বাটনে ক্লিক করুন।"
+                  isOpen={showPaymentModal}
+                  onToggle={() => setShowPaymentModal(!showPaymentModal)}
+                  onClose={() => setShowPaymentModal(false)}
+                  bkashCopied={bkashCopied}
+                  onCopyBkash={copyBkashNumber}
+                />
+
                 <button
                   type="submit"
                   className="w-full py-3 bg-[#0A2540] hover:bg-[#12365A] active:scale-[0.99] text-white font-bold text-sm rounded-xl shadow-xs transition-all cursor-pointer mt-4"
@@ -535,6 +699,20 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
                   />
                 </div>
 
+                {/* bKash Payment & TrxID */}
+                <BkashPaymentSection
+                  idPrefix="pantagraph"
+                  trxId={formData.trxId}
+                  onTrxIdChange={(val) => setFormData({ ...formData, trxId: val })}
+                  feeText="ফি: প্রযোজ্য অনুযায়ী"
+                  instructionText="এই নম্বরে Send Money করুন, তারপর Transaction ID উপরের বক্সে লিখে বুকিং করুন বাটনে ক্লিক করুন।"
+                  isOpen={showPaymentModal}
+                  onToggle={() => setShowPaymentModal(!showPaymentModal)}
+                  onClose={() => setShowPaymentModal(false)}
+                  bkashCopied={bkashCopied}
+                  onCopyBkash={copyBkashNumber}
+                />
+
                 <button
                   type="submit"
                   className="w-full py-3 bg-[#0A2540] hover:bg-[#12365A] active:scale-[0.99] text-white font-bold text-sm rounded-xl shadow-xs transition-all cursor-pointer mt-4"
@@ -625,11 +803,11 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
                   />
                 </div>
 
-                {/* ট্রানজেকশন আইডি ফিল্ড */}
+                {/* ট্রানজেকশন আইডি ফিল্ড (ঐচ্ছিক) */}
                 <div>
                   <div className="flex items-center justify-between mb-1">
                     <label className="block text-xs font-bold text-gray-800">
-                      ট্রানজেকশন আইডি <span className="text-red-500">*</span>
+                      ট্রানজেকশন আইডি <span className="text-gray-400 font-normal text-[11px]">(ঐচ্ছিক / Optional)</span>
                     </label>
                     <span className="text-[11px] text-pink-700 font-semibold">
                       ফি: ১০০০/- টাকা
@@ -637,14 +815,16 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
                   </div>
                   <input
                     type="text"
-                    required
                     autoComplete="off"
                     id="report-search-trxid-input"
-                    placeholder="bKash TrxID লিখুন (যেমন: BKL28049)"
+                    placeholder="bKash TrxID লিখুন (যদি পেমেন্ট করে থাকেন - ঐচ্ছিক)"
                     value={formData.trxId}
                     onChange={(e) => setFormData({ ...formData, trxId: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:border-[#0A2540] outline-none font-mono uppercase tracking-wider"
                   />
+                  <p className="text-[10px] text-gray-500 mt-1">
+                    পেমেন্ট সম্পন্ন করে থাকলে TrxID দিন। এটি বাধ্যতামূলক নয়, খালি রেখেও আবেদন পাঠাতে পারেন।
+                  </p>
                 </div>
 
                 {/* পেমেন্ট স্টেপ (অনুসন্ধান বাটনের আগে) */}
@@ -862,6 +1042,20 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
                   />
                 </div>
 
+                {/* bKash Payment & TrxID */}
+                <BkashPaymentSection
+                  idPrefix="deed-search"
+                  trxId={formData.trxId}
+                  onTrxIdChange={(val) => setFormData({ ...formData, trxId: val })}
+                  feeText="ফি: প্রযোজ্য অনুযায়ী"
+                  instructionText="এই নম্বরে Send Money করুন, তারপর Transaction ID উপরের বক্সে লিখে উত্তোলন আবেদন করুন বাটনে ক্লিক করুন।"
+                  isOpen={showPaymentModal}
+                  onToggle={() => setShowPaymentModal(!showPaymentModal)}
+                  onClose={() => setShowPaymentModal(false)}
+                  bkashCopied={bkashCopied}
+                  onCopyBkash={copyBkashNumber}
+                />
+
                 <button
                   type="submit"
                   className="w-full py-3 bg-[#0A2540] hover:bg-[#12365A] text-white font-bold text-sm rounded-xl shadow-xs transition-all cursor-pointer mt-4"
@@ -1005,6 +1199,20 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
                   />
                 </div>
 
+                {/* bKash Payment & TrxID */}
+                <BkashPaymentSection
+                  idPrefix="khatian-search"
+                  trxId={formData.trxId}
+                  onTrxIdChange={(val) => setFormData({ ...formData, trxId: val })}
+                  feeText="ফি: প্রযোজ্য অনুযায়ী"
+                  instructionText="এই নম্বরে Send Money করুন, তারপর Transaction ID উপরের বক্সে লিখে উত্তোলন আবেদন করুন বাটনে ক্লিক করুন।"
+                  isOpen={showPaymentModal}
+                  onToggle={() => setShowPaymentModal(!showPaymentModal)}
+                  onClose={() => setShowPaymentModal(false)}
+                  bkashCopied={bkashCopied}
+                  onCopyBkash={copyBkashNumber}
+                />
+
                 <button
                   type="submit"
                   className="w-full py-3 bg-[#0A2540] hover:bg-[#12365A] text-white font-bold text-sm rounded-xl shadow-xs transition-all cursor-pointer mt-4"
@@ -1091,6 +1299,24 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
                     onChange={(e) => setFormData({ ...formData, issueDesc: e.target.value })}
                     className="w-full px-3.5 py-2 rounded-xl border border-gray-300 text-sm focus:border-[#0A2540] outline-none resize-none"
                   />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-800 mb-1">
+                    ট্রানজেকশন আইডি <span className="text-gray-400 font-normal text-[11px]">(ঐচ্ছিক / Optional)</span>
+                  </label>
+                  <input
+                    type="text"
+                    autoComplete="off"
+                    id="open-booking-trxid-input"
+                    placeholder="bKash TrxID লিখুন (যদি পেমেন্ট করে থাকেন - ঐচ্ছিক)"
+                    value={formData.trxId}
+                    onChange={(e) => setFormData({ ...formData, trxId: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:border-[#0A2540] outline-none font-mono uppercase tracking-wider"
+                  />
+                  <p className="text-[10px] text-gray-500 mt-1">
+                    পরামর্শ ফি বিকাশ করে থাকলে TrxID লিখুন, নতুবা ফাঁকা রেখেও সাবমিট করতে পারেন।
+                  </p>
                 </div>
 
                 <button
@@ -1309,21 +1535,28 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
                   />
                 </div>
 
-                {/* ৮. ট্রানজেকশন আইডি */}
+                {/* ৮. ট্রানজেকশন আইডি (ঐচ্ছিক) */}
                 <div>
-                  <label className="block text-xs font-bold text-gray-800 mb-1">
-                    ট্রানজেকশন আইডি <span className="text-red-500">*</span>
-                  </label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-xs font-bold text-gray-800">
+                      ট্রানজেকশন আইডি <span className="text-gray-400 font-normal text-[11px]">(ঐচ্ছিক / Optional)</span>
+                    </label>
+                    <span className="text-[11px] text-pink-700 font-semibold">
+                      ম্যাপ ফি: প্রযোজ্য অনুযায়ী
+                    </span>
+                  </div>
                   <input
                     type="text"
-                    required
                     autoComplete="off"
                     id="mouza-map-trxid-input"
-                    placeholder="bKash TrxID লিখুন (যেমন: BKL28049)"
+                    placeholder="bKash TrxID লিখুন (যদি পেমেন্ট করে থাকেন - ঐচ্ছিক)"
                     value={formData.trxId}
                     onChange={(e) => setFormData({ ...formData, trxId: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:border-[#0A2540] outline-none font-mono uppercase tracking-wider"
                   />
+                  <p className="text-[10px] text-gray-500 mt-1">
+                    পেমেন্ট সম্পন্ন করে থাকলে TrxID দিন। এটি বাধ্যতামূলক নয়, খালি রেখেও আবেদন পাঠাতে পারেন।
+                  </p>
                 </div>
 
                 {/* পেমেন্ট করুন বাটন (সাবমিট বাটনের আগে) */}

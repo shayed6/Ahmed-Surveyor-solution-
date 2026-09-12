@@ -6,7 +6,11 @@ import {
   MuslimHeirsInput,
   HinduHeirsInput,
 } from './types';
-import { toBengaliNumerals, formatDecimalBn } from './muslimCalculation';
+import {
+  toBengaliNumerals,
+  formatDecimalBn,
+  convertLandToDecimal,
+} from './muslimCalculation';
 
 interface InheritancePdfReportProps {
   result: CalculationOutcome;
@@ -32,7 +36,7 @@ export const InheritancePdfReport: React.FC<InheritancePdfReportProps> = ({
     year: 'numeric',
   });
 
-  const reportId = `ASSC-FRZ-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+  const reportId = `ASSC-${religion === 'muslim' ? 'FRZ' : 'DHB'}-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
 
   const deceasedGenderText =
     religion === 'muslim'
@@ -43,17 +47,28 @@ export const InheritancePdfReport: React.FC<InheritancePdfReportProps> = ({
       ? 'মৃতা (নারী)'
       : 'মৃত (পুরুষ)';
 
+  const landInDecimal = convertLandToDecimal(assets.landAmount || 0, assets.landUnit || 'decimal');
+
+  const landUnitLabel =
+    assets.landUnit === 'acre'
+      ? 'একর'
+      : assets.landUnit === 'bigha'
+      ? 'বিঘা'
+      : assets.landUnit === 'katha'
+      ? 'কাঠা'
+      : 'শতাংশ';
+
   return (
     <div
       ref={reportRef}
       id="inheritance-pdf-printable-area"
       className="bg-white text-gray-900 p-8 max-w-[800px] mx-auto border border-gray-300 font-sans shadow-none print:p-4 print:border-none"
-      style={{ width: '800px', boxSizing: 'border-box' }}
+      style={{ width: '800px', boxSizing: 'border-box', backgroundColor: '#ffffff' }}
     >
       {/* 1. OFFICIAL LETTERHEAD / HEADER */}
       <div className="border-b-2 border-[#0A2540] pb-4 mb-4 text-center relative">
         <div className="inline-block px-3 py-1 bg-emerald-50 text-emerald-800 border border-emerald-300 rounded-full text-[11px] font-bold mb-2">
-          সরকারি সনদপ্রাপ্ত আধুনিক ডিজিটাল সার্ভে এন্ড সলুশন সেন্টার
+          সরকারি মানদণ্ড ও বিধিমালা অনুসরণে প্রস্তুতকৃত
         </div>
         <h1 className="text-2xl font-black text-[#0A2540] tracking-tight leading-tight">
           আহম্মদ টোটাল স্টেশন - সার্ভে এন্ড সলুশন সেন্টার
@@ -62,7 +77,7 @@ export const InheritancePdfReport: React.FC<InheritancePdfReportProps> = ({
           Ahmed Total Station - Survey & Solution Center
         </p>
         <p className="text-[11px] text-gray-600 mt-1">
-          ডিজিটাল সার্ভে, মৌজা ম্যাপ, সীমানা বিরোধ নিষ্পত্তি ও উত্তরাধিকার সম্পত্তি বণ্টন (ফরায়েজ)
+          ডিজিটাল সার্ভে, মৌজা ম্যাপ, সীমানা বিরোধ নিষ্পত্তি ও উত্তরাধিকার সম্পত্তি বণ্টন প্রতিবেদন
         </p>
         <div className="mt-2 text-xs font-bold text-gray-800 bg-gray-100 py-1 px-4 rounded-lg inline-flex items-center gap-4">
           <span>📞 হেল্পলাইন: +8801873434500</span>
@@ -75,10 +90,14 @@ export const InheritancePdfReport: React.FC<InheritancePdfReportProps> = ({
       <div className="bg-[#0A2540] text-white p-3 rounded-xl mb-4 flex items-center justify-between">
         <div>
           <span className="text-[10px] uppercase font-bold tracking-wider text-amber-300 block">
-            অফিসিয়াল ফরায়েজ ও বণ্টন প্রতিবেদন
+            {religion === 'muslim'
+              ? 'অফিসিয়াল ফারায়েজ বণ্টন প্রতিবেদন (uttoradhikar.gov.bd মানদণ্ড)'
+              : 'অফিসিয়াল দায়ভাগ সম্পত্তি বণ্টন প্রতিবেদন (হিন্দু আইন)'}
           </span>
           <h2 className="text-base font-bold">
-            উত্তরাধিকার সম্পত্তি বণ্টন বিবরণী ফলাফল
+            {religion === 'muslim'
+              ? 'উত্তরাধিকার সম্পত্তি বণ্টন বিবরণী ফলাফল (ফরায়েজ)'
+              : 'উত্তরাধিকার সম্পত্তি বণ্টন বিবরণী ফলাফল (দায়ভাগ)'}
           </h2>
         </div>
         <div className="text-right text-[11px] space-y-0.5 font-mono">
@@ -97,15 +116,15 @@ export const InheritancePdfReport: React.FC<InheritancePdfReportProps> = ({
             </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">মৃত ব্যক্তির তথ্য:</span>
+            <span className="text-gray-600">মৃত ব্যক্তির পরিচয়:</span>
             <span className="font-bold text-gray-800">{deceasedGenderText}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">আইন ও বিধান:</span>
-            <span className="font-semibold text-gray-800">
+            <span className="text-gray-600">আইনি রেফারেন্স:</span>
+            <span className="font-semibold text-gray-800 text-[11px]">
               {religion === 'muslim'
-                ? 'হানাফি ফিকহ ও মুসলিম পারিবারিক আইন ১৯৬১'
-                : 'হিন্দু দায়ভাগ আইন ও ১৯৩৭ সালের আইন'}
+                ? 'কুরআন, সুন্নাহ ও মুসলিম পারিবারিক আইন ১৯৬১'
+                : 'দায়ভাগ আইন ও ১৯৩৭ সালের হিন্দু আইন'}
             </span>
           </div>
         </div>
@@ -118,31 +137,35 @@ export const InheritancePdfReport: React.FC<InheritancePdfReportProps> = ({
           <div className="flex justify-between">
             <span className="text-gray-600">মোট জমি:</span>
             <span className="font-bold text-emerald-800 font-mono">
-              {toBengaliNumerals(assets.landAmount)}{' '}
-              {assets.landUnit === 'acre' ? 'একর' : 'শতাংশ'}
+              {toBengaliNumerals(assets.landAmount || 0)} {landUnitLabel}
+              {assets.landUnit !== 'decimal' && (
+                <span className="text-gray-500 text-[10px] font-normal">
+                  {' '}(= {formatDecimalBn(landInDecimal)} শতক)
+                </span>
+              )}
             </span>
           </div>
-          {assets.cashBDT > 0 && (
+          {(assets.cashBDT || 0) > 0 && (
             <div className="flex justify-between">
               <span className="text-gray-600">নগদ টাকা:</span>
               <span className="font-bold text-gray-900 font-mono">
-                ৳ {toBengaliNumerals(assets.cashBDT.toLocaleString('en-IN'))}
+                ৳ {toBengaliNumerals((assets.cashBDT || 0).toLocaleString('en-IN'))}
               </span>
             </div>
           )}
-          {assets.goldVori > 0 && (
+          {(assets.goldVori || 0) > 0 && (
             <div className="flex justify-between">
               <span className="text-gray-600">স্বর্ণ:</span>
               <span className="font-bold text-gray-900 font-mono">
-                {toBengaliNumerals(assets.goldVori)} ভরি
+                {toBengaliNumerals(formatDecimalBn(assets.goldVori || 0))} ভরি
               </span>
             </div>
           )}
-          {assets.silverVori > 0 && (
+          {(assets.silverVori || 0) > 0 && (
             <div className="flex justify-between">
               <span className="text-gray-600">রৌপ্য:</span>
               <span className="font-bold text-gray-900 font-mono">
-                {toBengaliNumerals(assets.silverVori)} ভরি
+                {toBengaliNumerals(formatDecimalBn(assets.silverVori || 0))} ভরি
               </span>
             </div>
           )}
@@ -164,44 +187,54 @@ export const InheritancePdfReport: React.FC<InheritancePdfReportProps> = ({
                 <th className="py-2 px-2 border-r border-gray-600">ওয়ারিশের পরিচয়</th>
                 <th className="py-2 px-2 border-r border-gray-600 text-center w-12">সংখ্যা</th>
                 <th className="py-2 px-2 border-r border-gray-600">শ্রেণি</th>
-                <th className="py-2 px-2 border-r border-gray-600 text-center">ফারায়েজ অংশ</th>
+                <th className="py-2 px-2 border-r border-gray-600 text-center">
+                  {religion === 'muslim' ? 'ফারায়েজ অংশ' : 'দায়ভাগ অংশ'}
+                </th>
                 <th className="py-2 px-2 border-r border-gray-600 text-center">হার (%)</th>
                 <th className="py-2 px-2 border-r border-gray-600 text-right">প্রাপ্ত মোট জমি</th>
                 <th className="py-2 px-2 text-right">জনপ্রতি জমি</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {result.heirResults.map((heir, idx) => (
-                <tr
-                  key={idx}
-                  className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/70'}
-                >
-                  <td className="py-2 px-2 border-r border-gray-200 text-center font-mono font-bold text-gray-600">
-                    {toBengaliNumerals(idx + 1)}
-                  </td>
-                  <td className="py-2 px-2 border-r border-gray-200 font-bold text-gray-900">
-                    {heir.relation}
-                  </td>
-                  <td className="py-2 px-2 border-r border-gray-200 text-center font-mono">
-                    {toBengaliNumerals(heir.count)} জন
-                  </td>
-                  <td className="py-2 px-2 border-r border-gray-200 text-[10px] text-gray-700">
-                    {heir.category}
-                  </td>
-                  <td className="py-2 px-2 border-r border-gray-200 text-center font-mono font-bold text-[#0A2540]">
-                    {heir.shareFraction}
-                  </td>
-                  <td className="py-2 px-2 border-r border-gray-200 text-center font-mono font-bold text-emerald-700">
-                    {toBengaliNumerals(heir.sharePercent.toFixed(2))}%
-                  </td>
-                  <td className="py-2 px-2 border-r border-gray-200 text-right font-mono font-bold text-gray-900">
-                    {formatDecimalBn(heir.totalLand)} শতক
-                  </td>
-                  <td className="py-2 px-2 text-right font-mono text-gray-800">
-                    {formatDecimalBn(heir.perPersonLand)} শতক
+              {result.heirResults.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="py-6 text-center text-gray-500">
+                    কোনো ওয়ারিশ পাওয়া যায়নি।
                   </td>
                 </tr>
-              ))}
+              ) : (
+                result.heirResults.map((heir, idx) => (
+                  <tr
+                    key={idx}
+                    className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/70'}
+                  >
+                    <td className="py-2 px-2 border-r border-gray-200 text-center font-mono font-bold text-gray-600">
+                      {toBengaliNumerals(idx + 1)}
+                    </td>
+                    <td className="py-2 px-2 border-r border-gray-200 font-bold text-gray-900">
+                      {heir.relation}
+                    </td>
+                    <td className="py-2 px-2 border-r border-gray-200 text-center font-mono">
+                      {toBengaliNumerals(heir.count)} জন
+                    </td>
+                    <td className="py-2 px-2 border-r border-gray-200 text-[10px] text-gray-700">
+                      {heir.category}
+                    </td>
+                    <td className="py-2 px-2 border-r border-gray-200 text-center font-mono font-bold text-[#0A2540]">
+                      {heir.shareFraction}
+                    </td>
+                    <td className="py-2 px-2 border-r border-gray-200 text-center font-mono font-bold text-emerald-700">
+                      {toBengaliNumerals((heir.sharePercent || 0).toFixed(2))}%
+                    </td>
+                    <td className="py-2 px-2 border-r border-gray-200 text-right font-mono font-bold text-gray-900">
+                      {formatDecimalBn(heir.totalLand || 0)} শতক
+                    </td>
+                    <td className="py-2 px-2 text-right font-mono text-gray-800">
+                      {formatDecimalBn(heir.perPersonLand || 0)} শতক
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
             <tfoot>
               <tr className="bg-gray-100 font-bold text-gray-900 border-t-2 border-gray-300">
@@ -209,10 +242,10 @@ export const InheritancePdfReport: React.FC<InheritancePdfReportProps> = ({
                   সর্বমোট বণ্টন:
                 </td>
                 <td className="py-2 px-2 text-center font-mono text-emerald-800">
-                  {toBengaliNumerals(result.totalDistributedPercent.toFixed(1))}%
+                  {toBengaliNumerals((result.totalDistributedPercent || 0).toFixed(1))}%
                 </td>
                 <td className="py-2 px-2 text-right font-mono text-emerald-800">
-                  {formatDecimalBn(assets.landAmount)} শতক
+                  {formatDecimalBn(landInDecimal)} শতক
                 </td>
                 <td className="py-2 px-2 text-right text-gray-500 text-[10px]">
                   সম্পূর্ণ বণ্টিত
@@ -224,7 +257,7 @@ export const InheritancePdfReport: React.FC<InheritancePdfReportProps> = ({
       </div>
 
       {/* 5. ADDITIONAL ASSETS BREAKDOWN (Cash/Gold/Silver if any) */}
-      {(assets.cashBDT > 0 || assets.goldVori > 0 || assets.silverVori > 0) && (
+      {((assets.cashBDT || 0) > 0 || (assets.goldVori || 0) > 0 || (assets.silverVori || 0) > 0) && (
         <div className="mb-4 p-3 bg-amber-50/60 border border-amber-200 rounded-xl text-xs">
           <h4 className="font-bold text-amber-950 mb-1.5">
             নগদ অর্থ ও অলংকার বণ্টন বিবরণ:
@@ -234,9 +267,9 @@ export const InheritancePdfReport: React.FC<InheritancePdfReportProps> = ({
               <div key={i} className="flex justify-between py-0.5 border-b border-amber-100">
                 <span className="font-semibold text-gray-800">{heir.relation} ({toBengaliNumerals(heir.count)} জন):</span>
                 <span className="font-mono text-gray-900">
-                  {assets.cashBDT > 0 && `৳${toBengaliNumerals(Math.round(heir.totalCash).toLocaleString('en-IN'))} `}
-                  {assets.goldVori > 0 && `| স্বর্ণ: ${formatDecimalBn(heir.totalGold)} ভরি `}
-                  {assets.silverVori > 0 && `| রৌপ্য: ${formatDecimalBn(heir.totalSilver)} ভরি`}
+                  {(assets.cashBDT || 0) > 0 && `৳${toBengaliNumerals(Math.round(heir.totalCash || 0).toLocaleString('en-IN'))} `}
+                  {(assets.goldVori || 0) > 0 && `| স্বর্ণ: ${formatDecimalBn(heir.totalGold || 0)} ভরি `}
+                  {(assets.silverVori || 0) > 0 && `| রৌপ্য: ${formatDecimalBn(heir.totalSilver || 0)} ভরি`}
                 </span>
               </div>
             ))}
@@ -260,7 +293,7 @@ export const InheritancePdfReport: React.FC<InheritancePdfReportProps> = ({
       {result.steps.length > 0 && (
         <div className="mb-4 p-3 bg-gray-50 border border-gray-200 rounded-xl text-xs">
           <h4 className="font-bold text-gray-900 mb-1">
-            হিসাবের ফিকহি/আইনি পদক্ষেপ ও ব্যাখ্যা:
+            হিসাবের আইনি পদক্ষেপ ও ব্যাখ্যা:
           </h4>
           <ol className="list-decimal list-inside text-[11px] text-gray-700 space-y-1">
             {result.steps.map((step, idx) => (
@@ -272,8 +305,8 @@ export const InheritancePdfReport: React.FC<InheritancePdfReportProps> = ({
 
       {/* 8. LEGAL DISCLAIMER */}
       <div className="mb-6 p-2.5 bg-gray-100 border border-gray-300 rounded-xl text-[10px] text-gray-600 leading-relaxed">
-        <strong className="text-gray-800">আইনি সতর্কবার্তা ও ঘোষণা: </strong>
-        {result.disclaimer} এটি একটি কম্পিউটারাইজড হিসাব বিবরণী। জমি হস্তান্তর বা রেজিস্ট্রি দলিল নিবন্ধনের পূর্বে মূল খতিয়ান ও বিজ্ঞ আইনজীবীর মতামত গ্রহণ আবশ্যক।
+        <strong className="text-gray-800">আইনি ঘোষণা: </strong>
+        {result.disclaimer} এটি একটি কম্পিউটারাইজড হিসাব বিবরণী। জমি হস্তান্তর বা রেজিস্ট্রি দলিল নিবন্ধনের পূর্বে মূল খতিয়ান যাচাই করা আবশ্যক।
       </div>
 
       {/* 9. SIGNATURES & VERIFICATION */}
@@ -301,7 +334,7 @@ export const InheritancePdfReport: React.FC<InheritancePdfReportProps> = ({
 
       {/* 10. FOOTER NOTE */}
       <div className="mt-6 pt-2 border-t border-gray-200 text-center text-[9px] text-gray-400">
-        আহম্মদ টোটাল স্টেশন - সার্ভে এন্ড সলুশন সেন্টার • মোবাইল / WhatsApp: +8801873434500 • অনলাইন ফরায়েজ প্রতিবেদন
+        আহম্মদ টোটাল স্টেশন - সার্ভে এন্ড সলুশন সেন্টার • মোবাইল / WhatsApp: +8801873434500 • উত্তরাধিকার সম্পত্তি বণ্টন প্রতিবেদন
       </div>
     </div>
   );

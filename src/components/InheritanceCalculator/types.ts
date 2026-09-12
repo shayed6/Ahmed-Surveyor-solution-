@@ -1,6 +1,6 @@
 export type Religion = 'muslim' | 'hindu';
 export type DeceasedGender = 'male' | 'female';
-export type LandUnit = 'decimal' | 'acre'; // শতক/শতাংশ or একর (1 acre = 100 decimals)
+export type LandUnit = 'decimal' | 'acre' | 'katha' | 'bigha'; // শতক, একর, কাঠা, বিঘা
 
 export interface MuslimHeirsInput {
   deceasedGender: DeceasedGender;
@@ -8,28 +8,37 @@ export interface MuslimHeirsInput {
   wivesCount: number; // if deceased is male (1 to 4)
   hasHusband: boolean; // if deceased is female
   // Parents
-  hasFather: boolean;
-  hasMother: boolean;
-  hasPaternalGrandfather: boolean; // দাদা
-  hasPaternalGrandmother: boolean; // দাদী
-  hasMaternalGrandmother: boolean; // নানী
+  hasFather: boolean; // পিতা
+  hasMother: boolean; // মাতা
+  hasPaternalGrandfather: boolean; // দাদা (পিতার পিতা)
+  hasPaternalGrandmother: boolean; // দাদী (পিতার মাতা)
+  hasMaternalGrandmother: boolean; // নানী (মাতার মাতা)
   // Children
-  sonsCount: number;
-  daughtersCount: number;
-  // Predeceased son's children (1961 MFLO Sec 4)
-  orphanedGrandsonsCount: number; // মৃত পুত্রের পুত্র
-  orphanedGranddaughtersCount: number; // মৃত পুত্রের কন্যা
+  sonsCount: number; // পুত্র
+  daughtersCount: number; // কন্যা
+  // Predeceased children's children (1961 MFLO Sec 4)
+  orphanedGrandsonsCount: number; // মৃত পুত্রের পুত্র (পৌত্র)
+  orphanedGranddaughtersCount: number; // মৃত পুত্রের কন্যা (পৌত্রী)
+  orphanedMaternalGrandsonsCount: number; // মৃত কন্যার পুত্র (দৌহিত্র)
+  orphanedMaternalGranddaughtersCount: number; // মৃত কন্যার কন্যা (দৌহিত্রী)
   // Siblings
-  fullBrothersCount: number; // সহোদর ভাই
-  fullSistersCount: number; // সহোদর বোন
-  // Paternal Uncle
-  paternalUnclesCount: number; // চাচা
+  fullBrothersCount: number; // সহোদর ভাই (আপন ভাই)
+  fullSistersCount: number; // সহোদর বোন (আপন বোন)
+  consanguineBrothersCount: number; // বৈমাত্রেয় ভাই (পিতা এক, মা ভিন্ন)
+  consanguineSistersCount: number; // বৈমাত্রেয় বোন (পিতা এক, মা ভিন্ন)
+  uterineBrothersCount: number; // বৈপিত্রেয় ভাই (মা এক, পিতা ভিন্ন)
+  uterineSistersCount: number; // বৈপিত্রেয় বোন (মা এক, পিতা ভিন্ন)
+  // Nephew & Paternal Uncle (Asaba)
+  fullNephewsCount: number; // সহোদর ভাইয়ের ছেলে / ভাতিজা
+  paternalUnclesCount: number; // সহোদর চাচা
 }
 
 export interface HinduHeirsInput {
   deceasedGender: DeceasedGender;
-  // Tier 1: Sons & Widow
+  // Spouse
   hasWidow: boolean; // বিধবা স্ত্রী (if male deceased)
+  hasHusband: boolean; // স্বামী (if female deceased)
+  // Tier 1: Sons & Widow
   sonsCount: number; // পুত্র
   grandsonsCount: number; // পৌত্র (মৃত পুত্রের পুত্র)
   greatGrandsonsCount: number; // প্রপৌত্র (মৃত পৌত্রের পুত্র)
@@ -44,7 +53,7 @@ export interface HinduHeirsInput {
   // Tier 6: Brother
   brothersCount: number; // সহোদর ভাই
   // Tier 7: Brother's son
-  brotherSonsCount: number; // ভাইয়ের পুত্র
+  brotherSonsCount: number; // ভাইয়ের পুত্র (ভাতিজা)
   // Tier 8: Sister
   sistersCount: number; // বোন
 }
