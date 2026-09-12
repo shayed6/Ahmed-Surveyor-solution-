@@ -97,34 +97,22 @@ export default function App() {
                     ৭. ওপেন বুকিং
                   </button>
                   <button
-                    onClick={() => setCurrentView('tracking')}
-                    className="px-2.5 py-1 rounded-lg bg-white border border-gray-200 hover:border-[#0A2540] text-gray-800 font-medium transition-colors"
-                  >
-                    ৮. ট্র্যাকিং
-                  </button>
-                  <button
-                    onClick={() => setCurrentView('payment')}
-                    className="px-2.5 py-1 rounded-lg bg-white border border-gray-200 hover:border-[#0A2540] text-gray-800 font-medium transition-colors"
-                  >
-                    ৯. পেমেন্ট
-                  </button>
-                  <button
-                    onClick={() => setCurrentView('my_bookings')}
-                    className="px-2.5 py-1 rounded-lg bg-white border border-gray-200 hover:border-[#0A2540] text-gray-800 font-medium transition-colors cursor-pointer"
-                  >
-                    ১০. আমার বুকিং
-                  </button>
-                  <button
-                    onClick={() => setCurrentView('admin')}
-                    className="px-2.5 py-1 rounded-lg bg-white border border-gray-200 hover:border-[#0A2540] text-gray-800 font-medium transition-colors cursor-pointer"
-                  >
-                    ১১. অ্যাডমিন
-                  </button>
-                  <button
                     onClick={() => setCurrentView('contact_us')}
                     className="px-2.5 py-1 rounded-lg bg-amber-50/80 border border-amber-300 hover:border-[#0A2540] text-[#0A2540] font-bold transition-colors cursor-pointer"
                   >
-                    ১২. যোগাযোগ করুন
+                    ৮. যোগাযোগ করুন
+                  </button>
+                  <button
+                    onClick={() => setCurrentView('order_app')}
+                    className="px-2.5 py-1 rounded-lg bg-white border border-gray-200 hover:border-[#0A2540] text-gray-800 font-medium transition-colors cursor-pointer"
+                  >
+                    ৯. অ্যাপ অর্ডার করুন
+                  </button>
+                  <button
+                    onClick={() => setCurrentView('privacy_policy')}
+                    className="px-2.5 py-1 rounded-lg bg-white border border-gray-200 hover:border-[#0A2540] text-gray-800 font-medium transition-colors cursor-pointer"
+                  >
+                    ১০. Privacy Policy
                   </button>
                 </div>
               </div>

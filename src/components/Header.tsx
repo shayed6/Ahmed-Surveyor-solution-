@@ -161,14 +161,6 @@ export const Header: React.FC<HeaderProps> = ({
                 </div>
 
                 <button
-                  onClick={() => handleNavClick('tracking')}
-                  className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 text-left cursor-pointer"
-                >
-                  <span className="w-4 h-4 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-bold">✓</span>
-                  <span>স্ট্যাটাস ট্র্যাকিং</span>
-                </button>
-
-                <button
                   onClick={() => {
                     setMenuOpen(false);
                     onReplaySplash();

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, CheckCircle2, Phone, Search, FileUp, Sparkles, MapPin, Calendar, Clock, DollarSign, User, Building2, Send, Bug, MessageSquare, ExternalLink, Shield, Smartphone, FileText, Copy, Check } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Phone, Search, MapPin, Calendar, Clock, User, Building2, Send, Bug, MessageSquare, ExternalLink, Shield, Smartphone, FileText, Copy, Check, CreditCard, X, Info } from 'lucide-react';
 import { ScreenView } from '../types';
 
 interface ServiceViewsProps {
@@ -18,6 +18,8 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
   const [generatedWhatsAppUrl, setGeneratedWhatsAppUrl] = useState('');
   const [generatedMessageText, setGeneratedMessageText] = useState('');
   const [copied, setCopied] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [bkashCopied, setBkashCopied] = useState(false);
 
   // Form states
   const [formData, setFormData] = useState({
@@ -80,12 +82,12 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
       case 'report_search': {
         const lines = [
           '*রিপোর্ট অনুসন্ধান আবেদন*',
-          'সার্ভিস: রিপোর্ট অনুসন্ধান',
+          `নাম: ${formData.name || 'উল্লেখ নেই'}`,
           `মৌজা: ${formData.mouza || 'উল্লেখ নেই'}`,
           `রিপোর্ট নম্বর: ${formData.reportNo || 'উল্লেখ নেই'}`,
           `WhatsApp নম্বর: ${formData.phone || 'উল্লেখ নেই'}`,
-          formData.name ? `নাম: ${formData.name}` : null,
-        ].filter(Boolean);
+          `ট্রানজেকশন আইডি: ${formData.trxId || 'উল্লেখ নেই'}`,
+        ];
         return lines.join('\n');
       }
 
@@ -135,15 +137,6 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
           formData.halDaag ? `হাল দাগ: ${formData.halDaag}` : null,
           formData.sabekDaag ? `সাবেক দাগ: ${formData.sabekDaag}` : null,
         ].filter(Boolean);
-        return lines.join('\n');
-      }
-
-      case 'payment': {
-        const lines = [
-          '*পেমেন্ট ভেরিফিকেশন অনুরোধ*',
-          'সার্ভিস: পেমেন্ট ভেরিফিকেশন',
-          `TrxID: ${formData.trxId || 'উল্লেখ নেই'}`,
-        ];
         return lines.join('\n');
       }
 
@@ -199,9 +192,18 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
     }
   };
 
+  const copyBkashNumber = () => {
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText('01635700386');
+      setBkashCopied(true);
+      setTimeout(() => setBkashCopied(false), 2500);
+    }
+  };
+
   const resetForm = () => {
     setSubmitted(false);
     setCopied(false);
+    setShowPaymentModal(false);
   };
 
   return (
@@ -536,7 +538,13 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
                 </p>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-3.5 mt-4" autoComplete="off">
+              {/* Fee notice banner */}
+              <div className="p-3 bg-amber-50/90 border border-amber-300/80 rounded-xl text-xs font-semibold text-amber-900 flex items-center gap-2 mb-2 shadow-2xs">
+                <Info size={16} className="text-amber-700 shrink-0" />
+                <span>*পুনঃ রিপোর্ট উত্তোলন ১০০০/- টাকা প্রযোজ্য</span>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-3.5 mt-3" autoComplete="off">
                 <div>
                   <label className="block text-xs font-bold text-gray-800 mb-1">
                     নাম <span className="text-red-500">*</span>
@@ -597,11 +605,122 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
                   />
                 </div>
 
+                {/* ট্রানজেকশন আইডি ফিল্ড */}
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-xs font-bold text-gray-800">
+                      ট্রানজেকশন আইডি <span className="text-red-500">*</span>
+                    </label>
+                    <span className="text-[11px] text-pink-700 font-semibold">
+                      ফি: ১০০০/- টাকা
+                    </span>
+                  </div>
+                  <input
+                    type="text"
+                    required
+                    autoComplete="off"
+                    id="report-search-trxid-input"
+                    placeholder="bKash TrxID লিখুন (যেমন: BKL28049)"
+                    value={formData.trxId}
+                    onChange={(e) => setFormData({ ...formData, trxId: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:border-[#0A2540] outline-none font-mono uppercase tracking-wider"
+                  />
+                </div>
+
+                {/* পেমেন্ট স্টেপ (অনুসন্ধান বাটনের আগে) */}
+                <div className="pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setShowPaymentModal(true)}
+                    id="btn-report-payment-open"
+                    className="w-full py-2.5 px-4 bg-gradient-to-r from-pink-50 to-pink-100/70 hover:from-pink-100 hover:to-pink-200/80 text-[#D12053] border border-pink-300 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-2xs active:scale-[0.99]"
+                  >
+                    <CreditCard size={16} className="text-[#E2136E]" />
+                    <span>পেমেন্ট করুন (bKash: 01635700386)</span>
+                  </button>
+                </div>
+
+                {/* Payment Modal / Box */}
+                {showPaymentModal && (
+                  <div className="p-4 bg-white border-2 border-[#E2136E]/40 rounded-2xl shadow-sm animate-in fade-in duration-200">
+                    <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-pink-100">
+                      <div className="flex items-center gap-1.5">
+                        <span className="px-2 py-0.5 rounded bg-[#E2136E] text-white text-[11px] font-bold">
+                          bKash
+                        </span>
+                        <span className="text-xs font-bold text-gray-900">
+                          বিকাশ পেমেন্ট বিবরণ
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setShowPaymentModal(false)}
+                        className="text-gray-400 hover:text-gray-600 p-1 cursor-pointer"
+                        title="বন্ধ করুন"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+
+                    <div className="space-y-2.5">
+                      <div className="flex items-center justify-between bg-pink-50/70 p-2.5 rounded-xl border border-pink-200">
+                        <div>
+                          <span className="text-[11px] text-gray-500 block">bKash নম্বর (Personal)</span>
+                          <span className="text-sm font-mono font-bold text-[#E2136E] tracking-wider">
+                            01635700386
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={copyBkashNumber}
+                          className="px-2.5 py-1.5 bg-white hover:bg-pink-100 text-xs font-bold text-[#E2136E] border border-pink-300 rounded-lg flex items-center gap-1 cursor-pointer transition-colors shadow-2xs"
+                        >
+                          {bkashCopied ? (
+                            <>
+                              <Check size={13} className="text-emerald-600" />
+                              <span className="text-emerald-600">কপি হয়েছে!</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy size={13} />
+                              <span>কপি করুন</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+
+                      <div className="text-[11px] text-gray-700 bg-amber-50 p-2.5 rounded-xl border border-amber-200 leading-relaxed">
+                        <p className="font-semibold text-amber-950 mb-0.5">নির্দেশনা:</p>
+                        <p>
+                          এই নম্বরে Send Money করুন, তারপর Transaction ID উপরের বক্সে লিখে অনুসন্ধান বাটনে ক্লিক করুন
+                        </p>
+                      </div>
+
+                      <div className="flex items-center justify-between text-xs px-1 text-gray-600">
+                        <span>ফি: <strong className="text-gray-900 font-mono">৳ ১০০০/-</strong></span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowPaymentModal(false);
+                            const el = document.getElementById('report-search-trxid-input');
+                            if (el) el.focus();
+                          }}
+                          className="text-[11px] font-bold text-[#0A2540] hover:underline cursor-pointer"
+                        >
+                          বুঝেছি, TrxID লিখুন →
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full py-3 bg-[#0A2540] hover:bg-[#12365A] text-white font-bold text-sm rounded-xl shadow-xs transition-all cursor-pointer mt-4"
+                  id="btn-report-search-submit"
+                  className="w-full py-3 bg-[#0A2540] hover:bg-[#12365A] active:scale-[0.99] text-white font-bold text-sm rounded-xl shadow-xs transition-all cursor-pointer mt-4 flex items-center justify-center gap-2"
                 >
-                  অনুসন্ধান করুন
+                  <Search size={16} />
+                  <span>অনুসন্ধান</span>
                 </button>
               </form>
             </div>
@@ -1056,303 +1175,6 @@ export const ServiceViews: React.FC<ServiceViewsProps> = ({
                 <span className="inline-block mt-1 px-3 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
                   পরামর্শ ফি প্রদান করতে হবে
                 </span>
-              </div>
-            </div>
-          )}
-
-          {/* SCREEN 7: স্ট্যাটাস ট্র্যাকিং পেজ */}
-          {currentView === 'tracking' && (
-            <div>
-              <div className="flex flex-col items-center text-center my-3">
-                <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center text-[#0A2540] mb-2">
-                  <Search size={24} className="text-[#0A2540]" />
-                </div>
-                <h2 className="text-lg font-bold text-gray-900">স্ট্যাটাস ট্র্যাকিং</h2>
-                <p className="text-xs text-gray-600 max-w-xs mt-0.5">
-                  আপনার বুকিংয়ের বর্তমান অবস্থা জানতে এখানে সার্চ করুন।
-                </p>
-              </div>
-
-              {/* Tabs */}
-              <div className="flex bg-gray-100 p-1 rounded-xl mb-4 text-xs font-bold">
-                <button className="flex-1 py-1.5 rounded-lg bg-[#0A2540] text-white">ফোন নম্বর</button>
-                <button className="flex-1 py-1.5 rounded-lg text-gray-600">সিরিয়াল নম্বর</button>
-              </div>
-
-              <div className="flex gap-2 mb-6">
-                <input
-                  type="text"
-                  placeholder="01XXXXXXXXX"
-                  defaultValue="01873434500"
-                  className="flex-1 px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm font-mono outline-none"
-                />
-                <button className="px-4 py-2.5 bg-[#0A2540] text-white font-bold text-xs rounded-xl flex items-center gap-1">
-                  <Search size={14} />
-                  <span>খুঁজুন</span>
-                </button>
-              </div>
-
-              {/* Vertical Timeline from Screen 7 */}
-              <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-xs">
-                <div className="space-y-4 relative before:absolute before:inset-0 before:left-3.5 before:w-0.5 before:bg-gray-200">
-                  {/* Step 1: Pending */}
-                  <div className="flex items-start gap-3 relative z-10">
-                    <div className="w-7 h-7 rounded-full bg-amber-500 text-white flex items-center justify-center text-xs font-bold shrink-0">
-                      ✓
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-gray-900">Pending</h4>
-                      <p className="text-[11px] text-gray-500">০৭-০৫-২০২৫ | ১০:৩০ AM</p>
-                    </div>
-                  </div>
-
-                  {/* Step 2: Confirmed */}
-                  <div className="flex items-start gap-3 relative z-10">
-                    <div className="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold shrink-0">
-                      ✓
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-gray-900">Confirmed</h4>
-                      <p className="text-[11px] text-gray-500">০৭-০৫-২০২৫ | ০২:১৬ PM</p>
-                    </div>
-                  </div>
-
-                  {/* Step 3: In Progress */}
-                  <div className="flex items-start gap-3 relative z-10">
-                    <div className="w-7 h-7 rounded-full bg-cyan-600 text-white flex items-center justify-center text-xs font-bold shrink-0">
-                      ●
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-gray-900">In Progress</h4>
-                      <p className="text-[11px] text-gray-500">০৮-০৫-২০২৫ | ১১:২০ AM</p>
-                    </div>
-                  </div>
-
-                  {/* Step 4: Completed */}
-                  <div className="flex items-start gap-3 relative z-10 opacity-50">
-                    <div className="w-7 h-7 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center text-xs font-bold shrink-0">
-                      ○
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-gray-900">Completed</h4>
-                      <p className="text-[11px] text-gray-500">চলমান...</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* SCREEN 8: পেমেন্ট পেজ */}
-          {currentView === 'payment' && (
-            <div>
-              <div className="flex flex-col items-center text-center my-3">
-                <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-[#0A2540] mb-2">
-                  <DollarSign size={24} className="text-[#0A2540]" />
-                </div>
-                <h2 className="text-lg font-bold text-gray-900">পেমেন্ট তথ্য</h2>
-                <p className="text-xs text-gray-600 max-w-xs mt-0.5">
-                  বুকিং নিশ্চিত করতে নিচের নম্বরে পেমেন্ট করুন।
-                </p>
-              </div>
-
-              {/* bKash & Nagad cards */}
-              <div className="grid grid-cols-2 gap-3 my-4">
-                <div className="p-3 bg-pink-50 border border-pink-200 rounded-xl text-center">
-                  <span className="text-sm font-bold text-pink-700 block">bKash</span>
-                  <span className="text-[11px] text-gray-500">বিকাশ নম্বর</span>
-                  <span className="text-xs font-bold font-mono text-gray-900 block mt-1">01812-345678</span>
-                </div>
-                <div className="p-3 bg-orange-50 border border-orange-200 rounded-xl text-center">
-                  <span className="text-sm font-bold text-orange-700 block">নগদ</span>
-                  <span className="text-[11px] text-gray-500">নগদ নম্বর</span>
-                  <span className="text-xs font-bold font-mono text-gray-900 block mt-1">01812-345678</span>
-                </div>
-              </div>
-
-              <div className="p-3 rounded-xl bg-blue-50 border border-blue-200 text-center mb-4">
-                <span className="text-xs text-blue-900">পেমেন্টের পরিমাণ: </span>
-                <span className="text-base font-bold text-[#0A2540]">৳ ৫০০ (টাকা)</span>
-              </div>
-
-              <form onSubmit={handleSubmit} className="space-y-3">
-                <div>
-                  <label className="block text-xs font-bold text-gray-800 mb-1">
-                    ট্রানজেকশন আইডি দিন (TrxID)
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Transaction ID লিখুন (উদা: 9M24A67B)"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm font-mono uppercase focus:border-[#0A2540] outline-none"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full py-3 bg-[#0A2540] hover:bg-[#12365A] text-white font-bold text-sm rounded-xl shadow-xs transition-all cursor-pointer"
-                >
-                  পেমেন্ট সাবমিট করুন
-                </button>
-              </form>
-
-              <div className="mt-4 p-3 bg-gray-50 rounded-xl text-center text-xs text-gray-600 border border-gray-200">
-                ⓘ পেমেন্ট স্ট্যাটাস: <span className="font-bold text-amber-700">Pending Verification</span>
-              </div>
-            </div>
-          )}
-
-          {/* SCREEN 9: আমার বুকিং (ইউজার ড্যাশবোর্ড) */}
-          {currentView === 'my_bookings' && (
-            <div>
-              <div className="flex items-center justify-between my-3">
-                <h2 className="text-lg font-bold text-gray-900">আমার বুকিং</h2>
-                <span className="text-xs text-gray-500 font-mono">৪টি বুকিং</span>
-              </div>
-
-              {/* Filter Pills */}
-              <div className="flex gap-2 mb-4 text-xs font-bold">
-                <button className="px-3 py-1 rounded-lg bg-[#0A2540] text-white">সকল</button>
-                <button className="px-3 py-1 rounded-lg bg-gray-100 text-gray-700">চলমান</button>
-                <button className="px-3 py-1 rounded-lg bg-gray-100 text-gray-700">সম্পন্ন</button>
-              </div>
-
-              {/* Bookings List from Screen 9 */}
-              <div className="space-y-3">
-                {/* Item 1 */}
-                <div className="bg-white border border-gray-200 rounded-xl p-3.5 shadow-xs">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-xs font-bold font-mono text-[#0A2540]">OB-003</span>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300">
-                      Pending
-                    </span>
-                  </div>
-                  <h4 className="text-sm font-bold text-gray-900">ভূমি পরিমাপ</h4>
-                  <div className="text-xs text-gray-600 mt-1 space-y-0.5">
-                    <p>তারিখ: ০৭-০৫-২০২৫</p>
-                    <p>মৌজা: কোটাবালী</p>
-                    <p>ফোন: ০১XXXXXXXXX</p>
-                  </div>
-                </div>
-
-                {/* Item 2 */}
-                <div className="bg-white border border-gray-200 rounded-xl p-3.5 shadow-xs">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-xs font-bold font-mono text-[#0A2540]">PR-002</span>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-900 border border-blue-300">
-                      Confirmed
-                    </span>
-                  </div>
-                  <h4 className="text-sm font-bold text-gray-900">রিপোর্ট অনুসন্ধান</h4>
-                  <div className="text-xs text-gray-600 mt-1 space-y-0.5">
-                    <p>তারিখ: ০৬-০৫-২০২৫</p>
-                    <p>মৌজা: চর ইব্রাহিম</p>
-                    <p>ফোন: ০১XXXXXXXXX</p>
-                  </div>
-                </div>
-
-                {/* Item 3 */}
-                <div className="bg-white border border-gray-200 rounded-xl p-3.5 shadow-xs">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-xs font-bold font-mono text-[#0A2540]">DS-001</span>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-100 text-cyan-900 border border-cyan-300">
-                      In Progress
-                    </span>
-                  </div>
-                  <h4 className="text-sm font-bold text-gray-900">দলিল উত্তোলন</h4>
-                  <div className="text-xs text-gray-600 mt-1 space-y-0.5">
-                    <p>তারিখ: ০৫-০৫-২০২৫</p>
-                    <p>মৌজা: ফুলবাড়ী</p>
-                    <p>ফোন: ০১XXXXXXXXX</p>
-                  </div>
-                </div>
-
-                {/* Item 4 */}
-                <div className="bg-white border border-gray-200 rounded-xl p-3.5 shadow-xs">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-xs font-bold font-mono text-[#0A2540]">KH-004</span>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300">
-                      Completed
-                    </span>
-                  </div>
-                  <h4 className="text-sm font-bold text-gray-900">খতিয়ান উত্তোলন</h4>
-                  <div className="text-xs text-gray-600 mt-1 space-y-0.5">
-                    <p>তারিখ: ০৪-০৫-২০২৫</p>
-                    <p>মৌজা: চর ইব্রাহিম | খতিয়ান নং: ৫৪</p>
-                    <p>ফোন: ০১XXXXXXXXX</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* SCREEN 10: অ্যাডমিন প্যানেল */}
-          {currentView === 'admin' && (
-            <div>
-              <div className="flex items-center justify-between my-3 p-3 bg-gradient-to-r from-gray-900 to-[#0A2540] text-white rounded-xl">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-amber-400 text-[#0A2540] flex items-center justify-center font-bold text-xs">
-                    AP
-                  </div>
-                  <div>
-                    <h3 className="text-xs font-bold">Admin Panel</h3>
-                    <p className="text-[10px] text-gray-300">আহম্মদ টোটাল স্টেশন</p>
-                  </div>
-                </div>
-                <span className="text-[11px] font-mono text-emerald-400">● Live</span>
-              </div>
-
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-2 my-3">
-                <div className="bg-white border border-gray-200 p-2.5 rounded-xl text-center">
-                  <span className="text-[10px] text-gray-500">মোট বুকিং</span>
-                  <span className="text-base font-bold text-[#0A2540] block">৪৮</span>
-                </div>
-                <div className="bg-white border border-gray-200 p-2.5 rounded-xl text-center">
-                  <span className="text-[10px] text-gray-500">পেন্ডিং</span>
-                  <span className="text-base font-bold text-amber-600 block">০৭</span>
-                </div>
-                <div className="bg-white border border-gray-200 p-2.5 rounded-xl text-center">
-                  <span className="text-[10px] text-gray-500">সম্পন্ন</span>
-                  <span className="text-base font-bold text-emerald-600 block">৪১</span>
-                </div>
-              </div>
-
-              {/* Table */}
-              <div className="bg-white border border-gray-200 rounded-xl p-3 my-3">
-                <h4 className="text-xs font-bold text-gray-900 mb-2">সাম্প্রতিক বুকিং</h4>
-                <div className="text-xs space-y-2">
-                  <div className="flex justify-between items-center py-1 border-b border-gray-100">
-                    <div>
-                      <span className="font-bold text-[#0A2540]">OB-003</span>
-                      <span className="text-gray-600 ml-1">রফিক উদ্দিন</span>
-                    </div>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">Pending</span>
-                  </div>
-                  <div className="flex justify-between items-center py-1 border-b border-gray-100">
-                    <div>
-                      <span className="font-bold text-[#0A2540]">PR-002</span>
-                      <span className="text-gray-600 ml-1">মোঃ করিম</span>
-                    </div>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-100 text-blue-800">Confirmed</span>
-                  </div>
-                  <div className="flex justify-between items-center py-1">
-                    <div>
-                      <span className="font-bold text-[#0A2540]">DS-001</span>
-                      <span className="text-gray-600 ml-1">নাসির উদ্দিন</span>
-                    </div>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-cyan-100 text-cyan-800">In Progress</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Upload Report PDF Box */}
-              <div className="p-4 border-2 border-dashed border-gray-300 rounded-xl text-center bg-gray-50">
-                <FileUp size={24} className="mx-auto text-gray-400 mb-1" />
-                <p className="text-xs font-bold text-gray-700">রিপোর্ট আপলোড</p>
-                <button className="mt-2 px-3 py-1 bg-[#0A2540] text-white text-[11px] font-bold rounded-lg">
-                  PDF আপলোড করুন
-                </button>
               </div>
             </div>
           )}
