@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import {
   ArrowLeft,
   RotateCcw,
@@ -13,6 +13,13 @@ import {
   ChevronUp,
   AlertTriangle,
   FileSpreadsheet,
+  FileDown,
+  Printer,
+  Eye,
+  X,
+  Loader2,
+  CheckCircle2,
+  FileText,
 } from 'lucide-react';
 import {
   Religion,
@@ -27,6 +34,8 @@ import {
   formatDecimalBn,
 } from './muslimCalculation';
 import { calculateHinduInheritance } from './hinduCalculation';
+import { exportElementToPdf } from './pdfExport';
+import { InheritancePdfReport } from './InheritancePdfReport';
 
 interface InheritanceCalculatorViewProps {
   onBack: () => void;
@@ -87,6 +96,28 @@ export const InheritanceCalculatorView: React.FC<InheritanceCalculatorViewProps>
   const [result, setResult] = useState<CalculationOutcome | null>(null);
   const [showSteps, setShowSteps] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [isExportingPdf, setIsExportingPdf] = useState(false);
+  const [pdfExportSuccess, setPdfExportSuccess] = useState(false);
+  const [showPdfPreviewModal, setShowPdfPreviewModal] = useState(false);
+  const pdfReportRef = useRef<HTMLDivElement | null>(null);
+
+  // Download PDF Handler
+  const handleDownloadPdf = async () => {
+    if (!pdfReportRef.current || !result) return;
+    setIsExportingPdf(true);
+    try {
+      const fileName = `উত্তরাধিকার_সম্পত্তি_বণ্টন_${religion === 'muslim' ? 'ফারায়েজ' : 'দায়ভাগ'}.pdf`;
+      const success = await exportElementToPdf(pdfReportRef.current, fileName);
+      if (success) {
+        setPdfExportSuccess(true);
+        setTimeout(() => setPdfExportSuccess(false), 3500);
+      }
+    } catch (err) {
+      console.error('PDF export failed:', err);
+    } finally {
+      setIsExportingPdf(false);
+    }
+  };
 
   // Execute Calculation
   const handleCalculate = () => {
@@ -681,7 +712,7 @@ export const InheritanceCalculatorView: React.FC<InheritanceCalculatorViewProps>
         {/* RESULTS SECTION */}
         {result && (
           <div className="bg-white border-2 border-[#0A2540]/30 rounded-2xl p-4 shadow-sm space-y-4 animate-in fade-in duration-300">
-            {/* Header & Copy Button */}
+            {/* Header & Actions */}
             <div className="flex items-center justify-between pb-3 border-b border-gray-200">
               <div>
                 <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 inline-block mb-1">
@@ -691,24 +722,45 @@ export const InheritanceCalculatorView: React.FC<InheritanceCalculatorViewProps>
                   উত্তরাধিকার সম্পত্তি বণ্টনের ফলাফল
                 </h3>
               </div>
-              <button
-                type="button"
-                onClick={copyResultText}
-                className="px-2.5 py-1.5 bg-gray-100 hover:bg-gray-200 text-xs font-semibold text-gray-700 rounded-lg flex items-center gap-1 cursor-pointer transition-colors"
-                title="ফলাফল কপি করুন"
-              >
-                {copied ? (
-                  <>
-                    <Check size={13} className="text-emerald-600" />
-                    <span className="text-emerald-700">কপি হয়েছে</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy size={13} />
-                    <span>কপি</span>
-                  </>
-                )}
-              </button>
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  id="btn-download-pdf-header"
+                  onClick={handleDownloadPdf}
+                  disabled={isExportingPdf}
+                  className="px-2.5 py-1.5 bg-emerald-700 hover:bg-emerald-800 active:scale-95 text-white text-xs font-semibold rounded-lg flex items-center gap-1 cursor-pointer transition-colors shadow-2xs disabled:opacity-70"
+                  title="পিডিএফ ডাউনলোড করুন"
+                >
+                  {isExportingPdf ? (
+                    <Loader2 size={13} className="animate-spin" />
+                  ) : pdfExportSuccess ? (
+                    <CheckCircle2 size={13} className="text-emerald-200" />
+                  ) : (
+                    <FileDown size={13} />
+                  )}
+                  <span>
+                    {isExportingPdf ? 'তৈরি...' : pdfExportSuccess ? 'হয়েছে!' : 'পিডিএফ'}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={copyResultText}
+                  className="px-2.5 py-1.5 bg-gray-100 hover:bg-gray-200 text-xs font-semibold text-gray-700 rounded-lg flex items-center gap-1 cursor-pointer transition-colors"
+                  title="ফলাফল কপি করুন"
+                >
+                  {copied ? (
+                    <>
+                      <Check size={13} className="text-emerald-600" />
+                      <span className="text-emerald-700">কপি হয়েছে</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy size={13} />
+                      <span>কপি</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
 
             {/* Total Assets Summary Chips */}
@@ -744,6 +796,66 @@ export const InheritanceCalculatorView: React.FC<InheritanceCalculatorViewProps>
                   </span>
                 </div>
               )}
+            </div>
+
+            {/* Prominent PDF Export Callout Card */}
+            <div className="bg-gradient-to-br from-emerald-50 via-teal-50/70 to-emerald-100/50 border border-emerald-300 rounded-xl p-3.5 shadow-2xs">
+              <div className="flex items-start gap-3">
+                <div className="w-9 h-9 rounded-xl bg-emerald-700 text-white flex items-center justify-center shrink-0 shadow-xs">
+                  <FileText size={19} />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <h4 className="text-xs font-bold text-emerald-950">
+                      অফিসিয়াল ফরায়েজ বিবরণী PDF
+                    </h4>
+                    <span className="text-[10px] px-1.5 py-0.2 bg-emerald-200 text-emerald-900 rounded-sm font-semibold">
+                      A4 প্রিন্টযোগ্য
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-gray-600 mt-0.5 leading-snug">
+                    ওয়ারিশ বণ্টন ছক, অংশ/শতকরা হার, ফিকহি কারণ ও অফিসিয়াল সীল-স্বাক্ষর যুক্ত পূর্ণাঙ্গ PDF সংগ্রহ করুন।
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-3 flex items-center gap-2">
+                <button
+                  type="button"
+                  id="btn-download-pdf-primary"
+                  onClick={handleDownloadPdf}
+                  disabled={isExportingPdf}
+                  className="flex-1 py-2.5 px-3 bg-emerald-700 hover:bg-emerald-800 active:scale-[0.98] disabled:opacity-75 text-white text-xs font-bold rounded-lg shadow-xs flex items-center justify-center gap-1.5 cursor-pointer transition-all"
+                >
+                  {isExportingPdf ? (
+                    <>
+                      <Loader2 size={15} className="animate-spin" />
+                      <span>পিডিএফ তৈরি হচ্ছে...</span>
+                    </>
+                  ) : pdfExportSuccess ? (
+                    <>
+                      <CheckCircle2 size={15} className="text-emerald-200" />
+                      <span>✓ ডাউনলোড সম্পন্ন হয়েছে!</span>
+                    </>
+                  ) : (
+                    <>
+                      <FileDown size={15} />
+                      <span>পিডিএফ ডাউনলোড করুন</span>
+                    </>
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  id="btn-preview-pdf"
+                  onClick={() => setShowPdfPreviewModal(true)}
+                  className="py-2.5 px-3 bg-white hover:bg-emerald-50 border border-emerald-300 text-emerald-900 text-xs font-bold rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs"
+                  title="প্রিভিউ দেখুন"
+                >
+                  <Eye size={14} />
+                  <span>প্রিভিউ</span>
+                </button>
+              </div>
             </div>
 
             {/* Heirs Share Cards */}
@@ -904,6 +1016,129 @@ export const InheritanceCalculatorView: React.FC<InheritanceCalculatorViewProps>
               <p className="leading-relaxed font-semibold">
                 {result.disclaimer}
               </p>
+            </div>
+
+            {/* Bottom Quick PDF Download Bar */}
+            <div className="pt-2 border-t border-gray-200 flex items-center justify-between gap-2 flex-wrap">
+              <span className="text-[11px] text-gray-600 font-medium">
+                ফরায়েজ বিবরণীর অফিসিয়াল কপি সংরক্ষণ করতে:
+              </span>
+              <button
+                type="button"
+                id="btn-download-pdf-footer"
+                onClick={handleDownloadPdf}
+                disabled={isExportingPdf}
+                className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 active:scale-95 text-white text-xs font-bold rounded-xl flex items-center gap-1.5 cursor-pointer transition-all shadow-xs disabled:opacity-75 ml-auto"
+              >
+                {isExportingPdf ? (
+                  <Loader2 size={14} className="animate-spin" />
+                ) : (
+                  <FileDown size={14} />
+                )}
+                <span>{isExportingPdf ? 'পিডিএফ তৈরি হচ্ছে...' : 'পিডিএফ ডাউনলোড করুন'}</span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Offscreen Target for PDF Generation (captured by html2canvas) */}
+        {result && (
+          <div
+            style={{
+              position: 'fixed',
+              left: '-9999px',
+              top: 0,
+              width: '800px',
+              zIndex: -100,
+              pointerEvents: 'none',
+            }}
+          >
+            <InheritancePdfReport
+              result={result}
+              assets={assets}
+              religion={religion}
+              muslimInput={muslimInput}
+              hinduInput={hinduInput}
+              reportRef={pdfReportRef}
+            />
+          </div>
+        )}
+
+        {/* PDF Preview Modal */}
+        {showPdfPreviewModal && result && (
+          <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex flex-col items-center justify-center p-2 sm:p-4">
+            <div className="bg-white w-full max-w-3xl max-h-[94vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-300 animate-in fade-in zoom-in-95 duration-200">
+              {/* Modal Header */}
+              <div className="flex items-center justify-between px-4 py-3 bg-[#0A2540] text-white">
+                <div className="flex items-center gap-2">
+                  <FileText size={18} className="text-amber-300" />
+                  <h3 className="text-sm font-bold">
+                    ফরায়েজ বণ্টন প্রতিবেদন (PDF প্রিভিউ)
+                  </h3>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleDownloadPdf}
+                    disabled={isExportingPdf}
+                    className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold rounded-lg flex items-center gap-1.5 cursor-pointer transition-all shadow-2xs"
+                  >
+                    {isExportingPdf ? (
+                      <>
+                        <Loader2 size={13} className="animate-spin" />
+                        <span>তৈরি হচ্ছে...</span>
+                      </>
+                    ) : (
+                      <>
+                        <FileDown size={13} />
+                        <span>ডাউনলোড PDF</span>
+                      </>
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => window.print()}
+                    className="px-2.5 py-1.5 bg-white/10 hover:bg-white/20 text-white text-xs font-semibold rounded-lg flex items-center gap-1 cursor-pointer transition-colors"
+                    title="প্রিন্ট করুন"
+                  >
+                    <Printer size={13} />
+                    <span className="hidden sm:inline">প্রিন্ট</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowPdfPreviewModal(false)}
+                    className="p-1.5 text-gray-300 hover:text-white rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
+                    title="বন্ধ করুন"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Modal Scrollable Body */}
+              <div className="flex-1 overflow-y-auto overflow-x-auto p-4 bg-gray-100 flex justify-center">
+                <div className="bg-white shadow-md my-1 max-w-full">
+                  <InheritancePdfReport
+                    result={result}
+                    assets={assets}
+                    religion={religion}
+                    muslimInput={muslimInput}
+                    hinduInput={hinduInput}
+                  />
+                </div>
+              </div>
+
+              {/* Modal Footer */}
+              <div className="px-4 py-2.5 bg-gray-50 border-t border-gray-200 flex items-center justify-between text-xs text-gray-600">
+                <span>আহম্মদ টোটাল স্টেশন - সার্ভে এন্ড সলুশন সেন্টার</span>
+                <button
+                  type="button"
+                  onClick={() => setShowPdfPreviewModal(false)}
+                  className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded-lg font-semibold text-gray-800 transition-colors cursor-pointer"
+                >
+                  বন্ধ করুন
+                </button>
+              </div>
             </div>
           </div>
         )}
