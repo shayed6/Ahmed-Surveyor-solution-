@@ -91,8 +91,8 @@ export const InheritancePdfReport: React.FC<InheritancePdfReportProps> = ({
         <div>
           <span className="text-[10px] uppercase font-bold tracking-wider text-amber-300 block">
             {religion === 'muslim'
-              ? 'অফিসিয়াল ফারায়েজ বণ্টন প্রতিবেদন (uttoradhikar.gov.bd মানদণ্ড)'
-              : 'অফিসিয়াল দায়ভাগ সম্পত্তি বণ্টন প্রতিবেদন (হিন্দু আইন)'}
+              ? 'ফারায়েজ সম্পত্তি বণ্টন প্রতিবেদন'
+              : 'দায়ভাগ সম্পত্তি বণ্টন প্রতিবেদন (হিন্দু আইন)'}
           </span>
           <h2 className="text-base font-bold">
             {religion === 'muslim'

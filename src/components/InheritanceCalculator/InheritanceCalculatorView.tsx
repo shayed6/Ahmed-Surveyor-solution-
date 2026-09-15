@@ -33,24 +33,9 @@ import {
   XCircle,
   X,
   FileText,
-  HelpCircle,
-  Scale,
-  PhoneCall,
-  ArrowRight,
 } from 'lucide-react';
-import {
-  InheritanceRulesSection,
-  InheritanceFaqSection,
-  InheritanceLawsSection,
-  InheritanceSupportSection,
-} from './InheritanceSections';
-
-export type PortalTab = 'calculator' | 'rules' | 'faq' | 'laws' | 'support';
 
 export const InheritanceCalculatorView: React.FC = () => {
-  // 0. Portal Navigation Tab (উত্তরাধিকার পোর্টাল সেকশন - সনদ বাদে)
-  const [portalTab, setPortalTab] = useState<PortalTab>('calculator');
-
   // 1. Religion selection
   const [religion, setReligion] = useState<Religion>('muslim');
 
@@ -298,8 +283,6 @@ export const InheritanceCalculatorView: React.FC = () => {
       text += `\nআইনানুযায়ী বঞ্চিত: ${result.excludedHeirs.join(', ')}\n`;
     }
 
-    text += `\nআহম্মদ টোটাল স্টেশন - সার্ভে এন্ড সলুশন সেন্টার\nহেল্পলাইন: +8801873434500`;
-
     navigator.clipboard.writeText(text);
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2500);
@@ -421,133 +404,25 @@ export const InheritanceCalculatorView: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50/60 font-sans text-gray-800 pb-24">
       {/* ========================================================================= */}
-      {/* 1. OFFICIAL GOVT BANNER & PORTAL HEADER (uttoradhikar.gov.bd MODEL) */}
+      {/* ১. শিরোনাম ও ২. মুসলিম/হিন্দু ট্যাব সিলেকশন */}
       {/* ========================================================================= */}
-      <header className="bg-gradient-to-r from-[#006a4e] via-[#004d38] to-[#006a4e] text-white shadow-md border-b-4 border-[#f42a41]">
-        <div className="max-w-5xl mx-auto px-4 py-4 sm:py-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            {/* Government Emblem & Title */}
-            <div className="flex items-center gap-3.5 text-center sm:text-left">
-              {/* National Emblem of Bangladesh Seal */}
-              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white p-1 shadow-lg shrink-0 border-2 border-amber-400 flex items-center justify-center">
-                <div className="w-full h-full rounded-full bg-[#006a4e] border border-amber-300 flex flex-col items-center justify-center text-amber-300 p-0.5">
-                  <div className="text-[8px] sm:text-[9px] font-bold text-center leading-none text-white">
-                    গণপ্রজাতন্ত্রী
-                  </div>
-                  <div className="text-[9px] sm:text-[10px] font-black text-amber-300 leading-tight">
-                    বাংলাদেশ
-                  </div>
-                  <div className="text-[7px] text-amber-200">★ সরকার ★</div>
-                </div>
-              </div>
-
-              <div>
-                <div className="inline-flex items-center gap-2 bg-emerald-900/60 px-2.5 py-0.5 rounded-full border border-emerald-400/40 text-[11px] font-medium text-emerald-100 mb-1">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                  <span>পবিত্র কুরআন, সুন্নাহ ও ফারায়েজ আইনসম্মত নিয়মাবলী</span>
-                </div>
-                <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white flex items-center gap-2">
-                  <span>উত্তরাধিকার</span>
-                  <span className="text-amber-300 text-sm sm:text-base font-normal">
-                    (অনলাইন সম্পত্তি বণ্টন ক্যালকুলেটর)
-                  </span>
-                </h1>
-                <p className="text-xs sm:text-sm text-emerald-100 font-medium">
-                  বাংলাদেশ সরকারের উত্তরাধিকার পোর্টাল (uttoradhikar.gov.bd) ও ফারায়েজ আইন বিধিমালা
-                </p>
-              </div>
+      <header className="bg-[#006a4e] text-white shadow-sm border-b border-emerald-900/40">
+        <div className="max-w-4xl mx-auto px-4 py-5 sm:py-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white flex flex-wrap items-center gap-2">
+                <span>উত্তরাধিকার</span>
+                <span className="text-amber-300 text-sm sm:text-base font-normal">
+                  (অনলাইন সম্পত্তি বণ্টন ক্যালকুলেটর)
+                </span>
+              </h1>
+              <p className="text-xs text-emerald-100 mt-1 font-medium">
+                আইনসম্মত ও নির্ভুল অনলাইন সম্পত্তি বণ্টন হিসাব
+              </p>
             </div>
 
-            {/* Helpline & Accreditation */}
-            <div className="hidden md:flex flex-col items-end text-right bg-white/10 px-4 py-2 rounded-xl border border-white/15 backdrop-blur-xs">
-              <span className="text-[10px] uppercase font-bold text-amber-300">
-                সার্ভে ও ফরায়েজ সহায়তা
-              </span>
-              <span className="text-sm font-bold text-white font-mono">
-                📞 +8801873434500
-              </span>
-              <span className="text-[10px] text-emerald-200">
-                আহম্মদ টোটাল স্টেশন সার্ভিস সেন্টার
-              </span>
-            </div>
-          </div>
-
-          {/* Portal Navigation Bar (uttoradhikar.gov.bd এর সব সেকশন - সনদ বাদে) */}
-          <nav className="mt-4 pt-3 border-t border-emerald-700/60 flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-            <button
-              type="button"
-              id="nav-section-calculator"
-              onClick={() => setPortalTab('calculator')}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
-                portalTab === 'calculator'
-                  ? 'bg-amber-400 text-emerald-950 shadow-xs'
-                  : 'text-emerald-100 hover:bg-white/10'
-              }`}
-            >
-              <Calculator size={14} />
-              <span>উত্তরাধিকার হিসাব</span>
-            </button>
-
-            <button
-              type="button"
-              id="nav-section-rules"
-              onClick={() => setPortalTab('rules')}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
-                portalTab === 'rules'
-                  ? 'bg-amber-400 text-emerald-950 shadow-xs'
-                  : 'text-emerald-100 hover:bg-white/10'
-              }`}
-            >
-              <BookOpen size={14} />
-              <span>নিয়মাবলী ও বিধান</span>
-            </button>
-
-            <button
-              type="button"
-              id="nav-section-faq"
-              onClick={() => setPortalTab('faq')}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
-                portalTab === 'faq'
-                  ? 'bg-amber-400 text-emerald-950 shadow-xs'
-                  : 'text-emerald-100 hover:bg-white/10'
-              }`}
-            >
-              <HelpCircle size={14} />
-              <span>সচরাচর জিজ্ঞাসা (FAQ)</span>
-            </button>
-
-            <button
-              type="button"
-              id="nav-section-laws"
-              onClick={() => setPortalTab('laws')}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
-                portalTab === 'laws'
-                  ? 'bg-amber-400 text-emerald-950 shadow-xs'
-                  : 'text-emerald-100 hover:bg-white/10'
-              }`}
-            >
-              <Scale size={14} />
-              <span>আইন ও নীতিমালা</span>
-            </button>
-
-            <button
-              type="button"
-              id="nav-section-support"
-              onClick={() => setPortalTab('support')}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
-                portalTab === 'support'
-                  ? 'bg-amber-400 text-emerald-950 shadow-xs'
-                  : 'text-emerald-100 hover:bg-white/10'
-              }`}
-            >
-              <PhoneCall size={14} />
-              <span>সার্ভে সহায়তা</span>
-            </button>
-          </nav>
-
-          {/* Religion Switcher Tabs (Only visible when calculating) */}
-          {portalTab === 'calculator' && (
-            <div className="mt-3 flex border-b border-emerald-700/60">
+            {/* ২. মুসলিম / হিন্দু ট্যাব সিলেকশন */}
+            <div className="flex bg-emerald-950/50 p-1 rounded-xl border border-emerald-700/60 shrink-0 self-start sm:self-auto">
               <button
                 type="button"
                 id="tab-muslim-inheritance"
@@ -555,16 +430,13 @@ export const InheritanceCalculatorView: React.FC = () => {
                   setReligion('muslim');
                   setResult(null);
                 }}
-                className={`flex-1 sm:flex-initial px-6 py-2.5 font-bold text-sm transition-all border-b-4 flex items-center justify-center gap-2 cursor-pointer ${
+                className={`px-4 py-2 rounded-lg font-bold text-xs sm:text-sm transition-all flex items-center gap-1.5 cursor-pointer ${
                   religion === 'muslim'
-                    ? 'border-amber-400 text-white bg-white/15 rounded-t-xl'
-                    : 'border-transparent text-emerald-200 hover:text-white hover:bg-white/5'
+                    ? 'bg-amber-400 text-emerald-950 shadow-xs'
+                    : 'text-emerald-100 hover:text-white hover:bg-white/10'
                 }`}
               >
-                <span>🌿 মুসলিম উত্তরাধিকার (ফারায়েজ)</span>
-                <span className="text-[10px] bg-amber-400 text-emerald-950 px-1.5 py-0.5 rounded font-black">
-                  uttoradhikar.gov.bd
-                </span>
+                <span>🌿 মুসলিম</span>
               </button>
 
               <button
@@ -574,53 +446,32 @@ export const InheritanceCalculatorView: React.FC = () => {
                   setReligion('hindu');
                   setResult(null);
                 }}
-                className={`flex-1 sm:flex-initial px-6 py-2.5 font-bold text-sm transition-all border-b-4 flex items-center justify-center gap-2 cursor-pointer ${
+                className={`px-4 py-2 rounded-lg font-bold text-xs sm:text-sm transition-all flex items-center gap-1.5 cursor-pointer ${
                   religion === 'hindu'
-                    ? 'border-amber-400 text-white bg-white/15 rounded-t-xl'
-                    : 'border-transparent text-emerald-200 hover:text-white hover:bg-white/5'
+                    ? 'bg-amber-400 text-emerald-950 shadow-xs'
+                    : 'text-emerald-100 hover:text-white hover:bg-white/10'
                 }`}
               >
-                <span>🪷 হিন্দু উত্তরাধিকার (দায়ভাগ)</span>
-                <span className="text-[10px] bg-white/20 text-white px-1.5 py-0.5 rounded">
-                  দায়ভাগ আইন
-                </span>
+                <span>🪷 হিন্দু</span>
               </button>
             </div>
-          )}
+          </div>
         </div>
       </header>
 
       {/* Main Container */}
-      <main className="max-w-5xl mx-auto px-3 sm:px-6 py-6 space-y-6">
-        {portalTab === 'rules' && (
-          <InheritanceRulesSection onGoToCalculator={() => setPortalTab('calculator')} />
-        )}
-
-        {portalTab === 'faq' && (
-          <InheritanceFaqSection onGoToCalculator={() => setPortalTab('calculator')} />
-        )}
-
-        {portalTab === 'laws' && (
-          <InheritanceLawsSection onGoToCalculator={() => setPortalTab('calculator')} />
-        )}
-
-        {portalTab === 'support' && (
-          <InheritanceSupportSection onGoToCalculator={() => setPortalTab('calculator')} />
-        )}
-
-        {portalTab === 'calculator' && (
-          <>
-            {/* Quick Notice */}
-            <div className="bg-amber-50/80 border border-amber-200 rounded-2xl p-4 text-xs text-amber-950 flex items-start gap-3 shadow-2xs">
+      <main className="max-w-4xl mx-auto px-3 sm:px-6 py-6 space-y-6">
+        {/* Quick Notice */}
+        <div className="bg-amber-50/80 border border-amber-200 rounded-2xl p-4 text-xs text-amber-950 flex items-start gap-3 shadow-2xs">
           <Info size={18} className="text-amber-700 shrink-0 mt-0.5" />
           <div className="space-y-1">
             <p className="font-semibold text-amber-900">
               {religion === 'muslim'
-                ? 'পবিত্র কুরআন, সুন্নাহ ও ১৯৬১ সালের মুসলিম পারিবারিক আইন অধ্যাদেশের ৪ ধারা অনুযায়ী নির্ভুল স্বয়ংক্রিয় হিসাব।'
-                : 'ঐতিহ্যবাহী দায়ভাগ পদ্ধতি এবং ১৯৩৭ সালের হিন্দু নারী সম্পত্তি অধিকার আইন (Act XVIII of 1937) অনুসরণে প্রস্তুতকৃত।'}
+                ? 'পবিত্র কুরআন, সুন্নাহ ও মুসলিম পারিবারিক আইন অধ্যাদেশ অনুযায়ী নির্ভুল স্বয়ংক্রিয় হিসাব।'
+                : 'ঐতিহ্যবাহী দায়ভাগ পদ্ধতি এবং হিন্দু নারী সম্পত্তি অধিকার আইন অনুসরণে প্রস্তুতকৃত।'}
             </p>
             <p className="text-amber-800/90 text-[11px]">
-              প্রথমে মৃত ব্যক্তির লিঙ্গ নির্ধারণ করুন, অতঃপর জীবিত ওয়ারিশগণের সংখ্যা ও সম্পত্তির পরিমাণ দিয়ে{' '}
+              মৃত ব্যক্তির তথ্য নির্ধারণ করুন, জীবিত ওয়ারিশগণের সংখ্যা ও সম্পত্তির পরিমাণ দিয়ে{' '}
               <strong className="text-emerald-900 font-bold">"হিসাব করুন"</strong> বাটনে ক্লিক করুন।
             </p>
           </div>
@@ -1402,10 +1253,10 @@ export const InheritanceCalculatorView: React.FC = () => {
             type="button"
             id="btn-calculate-inheritance"
             onClick={handleCalculate}
-            className="flex-1 py-3.5 px-6 bg-gradient-to-r from-[#006a4e] to-[#00875a] hover:from-[#005a42] hover:to-[#00744e] active:scale-[0.99] text-white font-bold text-base rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer border border-emerald-500"
+            className="flex-1 py-3.5 px-6 bg-[#006a4e] hover:bg-[#00523c] active:scale-[0.99] text-white font-bold text-base rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer border border-emerald-500"
           >
             <Calculator size={20} className="text-amber-300" />
-            <span>হিসাব করুন (উত্তরাধিকার বণ্টন ফলাফল)</span>
+            <span>হিসাব করুন</span>
           </button>
 
           <button
@@ -1673,80 +1524,7 @@ export const InheritanceCalculatorView: React.FC = () => {
             </div>
           </section>
         )}
-
-        {/* Quick Portal Exploration Cards (uttoradhikar.gov.bd সেকশনসমূহ) */}
-        <div className="pt-4 border-t border-gray-200">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500">
-              উত্তরাধিকার পোর্টাল সংবিধি ও নির্দেশিকা
-            </h3>
-            <span className="text-[11px] text-emerald-800 font-semibold">
-              সহায়িকা ও আইন
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <button
-              type="button"
-              onClick={() => setPortalTab('rules')}
-              className="p-4 rounded-2xl bg-white border border-gray-200 hover:border-emerald-500 hover:shadow-xs text-left transition-all group cursor-pointer"
-            >
-              <div className="flex items-center justify-between mb-1.5">
-                <div className="flex items-center gap-2 text-emerald-800">
-                  <BookOpen size={16} />
-                  <span className="font-bold text-xs text-gray-900 group-hover:text-emerald-700">
-                    নিয়মাবলী ও ফারায়েজ বিধান
-                  </span>
-                </div>
-                <ArrowRight size={14} className="text-gray-400 group-hover:text-emerald-700 transition-transform group-hover:translate-x-1" />
-              </div>
-              <p className="text-[11px] text-gray-500 leading-relaxed">
-                ১২ জন নির্দিষ্ট অংশীদার (যাবিল ফুরুজ), আসাবা, আউল ও রদ্দ নীতি বিস্তারিত জানুন।
-              </p>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setPortalTab('faq')}
-              className="p-4 rounded-2xl bg-white border border-gray-200 hover:border-emerald-500 hover:shadow-xs text-left transition-all group cursor-pointer"
-            >
-              <div className="flex items-center justify-between mb-1.5">
-                <div className="flex items-center gap-2 text-emerald-800">
-                  <HelpCircle size={16} />
-                  <span className="font-bold text-xs text-gray-900 group-hover:text-emerald-700">
-                    সচরাচর জিজ্ঞাসা (FAQ)
-                  </span>
-                </div>
-                <ArrowRight size={14} className="text-gray-400 group-hover:text-emerald-700 transition-transform group-hover:translate-x-1" />
-              </div>
-              <p className="text-[11px] text-gray-500 leading-relaxed">
-                মৃতের ঋণ পরিশোধ, এতিম নাতি-নাতনির অধিকার ও নামজারি বিরোধের আইনি প্রশ্নোত্তর।
-              </p>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setPortalTab('laws')}
-              className="p-4 rounded-2xl bg-white border border-gray-200 hover:border-emerald-500 hover:shadow-xs text-left transition-all group cursor-pointer"
-            >
-              <div className="flex items-center justify-between mb-1.5">
-                <div className="flex items-center gap-2 text-emerald-800">
-                  <Scale size={16} />
-                  <span className="font-bold text-xs text-gray-900 group-hover:text-emerald-700">
-                    আইন ও নীতিমালা
-                  </span>
-                </div>
-                <ArrowRight size={14} className="text-gray-400 group-hover:text-emerald-700 transition-transform group-hover:translate-x-1" />
-              </div>
-              <p className="text-[11px] text-gray-500 leading-relaxed">
-                ১৯৬১ পারিবারিক আইন ও ২০২৩ সালের ভূমি অপরাধ আইনের সুনির্দিষ্ট আইনি রেফারেন্স।
-              </p>
-            </button>
-          </div>
-        </div>
-      </>
-    )}
-  </main>
+      </main>
 
       {/* ========================================================================= */}
       {/* HIDDEN / OFFSCREEN TARGET FOR HIGH-RES PDF EXPORT */}

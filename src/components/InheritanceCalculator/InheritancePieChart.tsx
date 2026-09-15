@@ -135,7 +135,7 @@ export const InheritancePieChart: React.FC<InheritancePieChartProps> = ({
           </h3>
         </div>
         <span className="text-[11px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
-          uttoradhikar.gov.bd চার্ট
+          শতকরা বণ্টন
         </span>
       </div>
 
