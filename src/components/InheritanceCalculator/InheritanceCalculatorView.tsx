@@ -62,7 +62,17 @@ export const InheritanceCalculatorView: React.FC = () => {
     uterineBrothersCount: 0,
     uterineSistersCount: 0,
     fullNephewsCount: 0,
+    consanguineNephewsCount: 0,
+    fullNephewSonsCount: 0,
+    consanguineNephewSonsCount: 0,
     paternalUnclesCount: 0,
+    consanguinePaternalUnclesCount: 0,
+    fullUncleSonsCount: 0,
+    consanguineUncleSonsCount: 0,
+    fullUncleGrandSonsCount: 0,
+    consanguineUncleGrandSonsCount: 0,
+    fullUncleGreatGrandSonsCount: 0,
+    consanguineUncleGreatGrandSonsCount: 0,
   });
 
   // 3. Hindu Heirs Input State
@@ -214,7 +224,17 @@ export const InheritanceCalculatorView: React.FC = () => {
       uterineBrothersCount: 0,
       uterineSistersCount: 0,
       fullNephewsCount: 0,
+      consanguineNephewsCount: 0,
+      fullNephewSonsCount: 0,
+      consanguineNephewSonsCount: 0,
       paternalUnclesCount: 0,
+      consanguinePaternalUnclesCount: 0,
+      fullUncleSonsCount: 0,
+      consanguineUncleSonsCount: 0,
+      fullUncleGrandSonsCount: 0,
+      consanguineUncleGrandSonsCount: 0,
+      fullUncleGreatGrandSonsCount: 0,
+      consanguineUncleGreatGrandSonsCount: 0,
     });
     setHinduInput({
       deceasedGender: 'male',
@@ -887,7 +907,7 @@ export const InheritanceCalculatorView: React.FC = () => {
                 >
                   <span className="flex items-center gap-2">
                     <span>🤝</span>
-                    <span>অন্যান্য দূরবর্তী আত্মীয় (ভাতিজা ও চাচা)</span>
+                    <span>অন্যান্য দূরবর্তী আত্মীয় (ভাতিজা, চাচা ও চাচাতো ভাই)</span>
                   </span>
                   {openSection.extended ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                 </button>
@@ -895,7 +915,7 @@ export const InheritanceCalculatorView: React.FC = () => {
                 {openSection.extended && (
                   <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3 bg-white">
                     <NumberStepper
-                      label="সহোদর ভাইয়ের পুত্র (ভাতিজা)"
+                      label="সহোদর ভাইয়ের পুত্র"
                       badge="আসাবা"
                       value={muslimInput.fullNephewsCount}
                       onChange={(v) =>
@@ -903,11 +923,94 @@ export const InheritanceCalculatorView: React.FC = () => {
                       }
                     />
                     <NumberStepper
-                      label="চাচা (পিতার আপন ভাই)"
+                      label="সৎ ভাই (বৈমাত্রেয়)-এর পুত্র"
+                      badge="আসাবা"
+                      value={muslimInput.consanguineNephewsCount}
+                      onChange={(v) =>
+                        setMuslimInput((prev) => ({ ...prev, consanguineNephewsCount: v }))
+                      }
+                    />
+                    <NumberStepper
+                      label="সহোদর ভাইয়ের পুত্রের পুত্র"
+                      badge="আসাবা"
+                      value={muslimInput.fullNephewSonsCount}
+                      onChange={(v) =>
+                        setMuslimInput((prev) => ({ ...prev, fullNephewSonsCount: v }))
+                      }
+                    />
+                    <NumberStepper
+                      label="সৎ ভাই (বৈমাত্রেয়)-এর পুত্রের পুত্র"
+                      badge="আসাবা"
+                      value={muslimInput.consanguineNephewSonsCount}
+                      onChange={(v) =>
+                        setMuslimInput((prev) => ({ ...prev, consanguineNephewSonsCount: v }))
+                      }
+                    />
+                    <NumberStepper
+                      label="আপন চাচা"
                       badge="আসাবা"
                       value={muslimInput.paternalUnclesCount}
                       onChange={(v) =>
                         setMuslimInput((prev) => ({ ...prev, paternalUnclesCount: v }))
+                      }
+                    />
+                    <NumberStepper
+                      label="সৎ চাচা (বৈমাত্রেয়)"
+                      badge="আসাবা"
+                      value={muslimInput.consanguinePaternalUnclesCount}
+                      onChange={(v) =>
+                        setMuslimInput((prev) => ({ ...prev, consanguinePaternalUnclesCount: v }))
+                      }
+                    />
+                    <NumberStepper
+                      label="আপন চাচার পুত্র"
+                      badge="আসাবা"
+                      value={muslimInput.fullUncleSonsCount}
+                      onChange={(v) =>
+                        setMuslimInput((prev) => ({ ...prev, fullUncleSonsCount: v }))
+                      }
+                    />
+                    <NumberStepper
+                      label="সৎ চাচার পুত্র"
+                      badge="আসাবা"
+                      value={muslimInput.consanguineUncleSonsCount}
+                      onChange={(v) =>
+                        setMuslimInput((prev) => ({ ...prev, consanguineUncleSonsCount: v }))
+                      }
+                    />
+                    <NumberStepper
+                      label="আপন চাচার পুত্রের পুত্র"
+                      badge="আসাবা"
+                      value={muslimInput.fullUncleGrandSonsCount}
+                      onChange={(v) =>
+                        setMuslimInput((prev) => ({ ...prev, fullUncleGrandSonsCount: v }))
+                      }
+                    />
+                    <NumberStepper
+                      label="সৎ চাচার পুত্রের পুত্র"
+                      badge="আসাবা"
+                      value={muslimInput.consanguineUncleGrandSonsCount}
+                      onChange={(v) =>
+                        setMuslimInput((prev) => ({ ...prev, consanguineUncleGrandSonsCount: v }))
+                      }
+                    />
+                    <NumberStepper
+                      label="আপন চাচার পুত্রের পুত্রের পুত্র"
+                      badge="আসাবা"
+                      value={muslimInput.fullUncleGreatGrandSonsCount}
+                      onChange={(v) =>
+                        setMuslimInput((prev) => ({ ...prev, fullUncleGreatGrandSonsCount: v }))
+                      }
+                    />
+                    <NumberStepper
+                      label="সৎ চাচার পুত্রের পুত্রের পুত্র"
+                      badge="আসাবা"
+                      value={muslimInput.consanguineUncleGreatGrandSonsCount}
+                      onChange={(v) =>
+                        setMuslimInput((prev) => ({
+                          ...prev,
+                          consanguineUncleGreatGrandSonsCount: v,
+                        }))
                       }
                     />
                   </div>

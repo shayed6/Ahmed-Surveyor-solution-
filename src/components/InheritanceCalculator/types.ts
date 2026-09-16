@@ -28,9 +28,19 @@ export interface MuslimHeirsInput {
   consanguineSistersCount: number; // বৈমাত্রেয় বোন (পিতা এক, মা ভিন্ন)
   uterineBrothersCount: number; // বৈপিত্রেয় ভাই (মা এক, পিতা ভিন্ন)
   uterineSistersCount: number; // বৈপিত্রেয় বোন (মা এক, পিতা ভিন্ন)
-  // Nephew & Paternal Uncle (Asaba)
-  fullNephewsCount: number; // সহোদর ভাইয়ের ছেলে / ভাতিজা
-  paternalUnclesCount: number; // সহোদর চাচা
+  // Nephew & Paternal Uncle Extended Collaterals (Asaba bi-nafsihi)
+  fullNephewsCount: number; // সহোদর ভাইয়ের পুত্র
+  consanguineNephewsCount: number; // সৎ ভাই (বৈমাত্রেয়)-এর পুত্র
+  fullNephewSonsCount: number; // সহোদর ভাইয়ের পুত্রের পুত্র
+  consanguineNephewSonsCount: number; // সৎ ভাই (বৈমাত্রেয়)-এর পুত্রের পুত্র
+  paternalUnclesCount: number; // আপন চাচা
+  consanguinePaternalUnclesCount: number; // সৎ চাচা (বৈমাত্রেয়)
+  fullUncleSonsCount: number; // আপন চাচার পুত্র
+  consanguineUncleSonsCount: number; // সৎ চাচার পুত্র
+  fullUncleGrandSonsCount: number; // আপন চাচার পুত্রের পুত্র
+  consanguineUncleGrandSonsCount: number; // সৎ চাচার পুত্রের পুত্র
+  fullUncleGreatGrandSonsCount: number; // আপন চাচার পুত্রের পুত্রের পুত্র
+  consanguineUncleGreatGrandSonsCount: number; // সৎ চাচার পুত্রের পুত্রের পুত্র
 }
 
 export interface HinduHeirsInput {

@@ -344,10 +344,25 @@ export function calculateMuslimInheritance(
       excludedHeirs.push(`বৈপিত্রেয় ভাই (${toBengaliNumerals(uterineBrothers)} জন - বংশধর/পিতা থাকায় বঞ্চিত)`);
     if (uterineSisters > 0)
       excludedHeirs.push(`বৈপিত্রেয় বোন (${toBengaliNumerals(uterineSisters)} জন - বংশধর/পিতা থাকায় বঞ্চিত)`);
-    if (input.fullNephewsCount > 0)
-      excludedHeirs.push(`ভাতিজা (${toBengaliNumerals(input.fullNephewsCount)} জন - উচ্চতর ওয়ারিশ থাকায় বঞ্চিত)`);
-    if (input.paternalUnclesCount > 0)
-      excludedHeirs.push(`চাচা (${toBengaliNumerals(input.paternalUnclesCount)} জন - উচ্চতর ওয়ারিশ থাকায় বঞ্চিত)`);
+    const collateralAgnates = [
+      { name: 'সহোদর ভাইয়ের পুত্র', count: input.fullNephewsCount || 0 },
+      { name: 'সৎ ভাই (বৈমাত্রেয়)-এর পুত্র', count: input.consanguineNephewsCount || 0 },
+      { name: 'সহোদর ভাইয়ের পুত্রের পুত্র', count: input.fullNephewSonsCount || 0 },
+      { name: 'সৎ ভাই (বৈমাত্রেয়)-এর পুত্রের পুত্র', count: input.consanguineNephewSonsCount || 0 },
+      { name: 'আপন চাচা', count: input.paternalUnclesCount || 0 },
+      { name: 'সৎ চাচা (বৈমাত্রেয়)', count: input.consanguinePaternalUnclesCount || 0 },
+      { name: 'আপন চাচার পুত্র', count: input.fullUncleSonsCount || 0 },
+      { name: 'সৎ চাচার পুত্র', count: input.consanguineUncleSonsCount || 0 },
+      { name: 'আপন চাচার পুত্রের পুত্র', count: input.fullUncleGrandSonsCount || 0 },
+      { name: 'সৎ চাচার পুত্রের পুত্র', count: input.consanguineUncleGrandSonsCount || 0 },
+      { name: 'আপন চাচার পুত্রের পুত্রের পুত্র', count: input.fullUncleGreatGrandSonsCount || 0 },
+      { name: 'সৎ চাচার পুত্রের পুত্রের পুত্র', count: input.consanguineUncleGreatGrandSonsCount || 0 },
+    ];
+    for (const agnate of collateralAgnates) {
+      if (agnate.count > 0) {
+        excludedHeirs.push(`${agnate.name} (${toBengaliNumerals(agnate.count)} জন - উচ্চতর ওয়ারিশ থাকায় বঞ্চিত)`);
+      }
+    }
   }
 
   // -------------------------------------------------------------
@@ -672,30 +687,51 @@ export function calculateMuslimInheritance(
             explanation: 'সহোদর ভাই/বোন না থাকায় বৈমাত্রেয় বোন নির্ধারিত অংশ পান।',
           });
         }
-      } else if (input.fullNephewsCount > 0) {
-        rawShares.push({
-          relation: `ভাতিজা - সহোদর ভাইয়ের ছেলে (${toBengaliNumerals(input.fullNephewsCount)} জন)`,
-          count: input.fullNephewsCount,
-          category: 'আসাবা (অবশিষ্টভোগী)',
-          fractionLabel: 'সম্পূর্ণ অবশিষ্ট',
-          shareRatio: remainingAfterFixed,
-          explanation:
-            'নিকটবর্তী কোনো পুরুষ বংশধর বা ভাই না থাকায় ভাতিজা আসাবা হিসেবে অবশিষ্ট সম্পত্তি পান।',
-          isAsaba: true,
-        });
-        remainingAfterFixed = 0;
-      } else if (input.paternalUnclesCount > 0) {
-        rawShares.push({
-          relation: `সহোদর চাচা (${toBengaliNumerals(input.paternalUnclesCount)} জন)`,
-          count: input.paternalUnclesCount,
-          category: 'আসাবা (অবশিষ্টভোগী)',
-          fractionLabel: 'সম্পূর্ণ অবশিষ্ট',
-          shareRatio: remainingAfterFixed,
-          explanation:
-            'নিকটাত্মীয় কোনো আসাবা না থাকায় সহোদর চাচা আসাবা হিসেবে সমুদয় অবশিষ্ট সম্পত্তি পান।',
-          isAsaba: true,
-        });
-        remainingAfterFixed = 0;
+      }
+
+      // Collateral Agnates (Asaba bi-nafsihi) in canonical Hanafi priority order:
+      const collateralAgnates = [
+        { name: 'সহোদর ভাইয়ের পুত্র', count: input.fullNephewsCount || 0 },
+        { name: 'সৎ ভাই (বৈমাত্রেয়)-এর পুত্র', count: input.consanguineNephewsCount || 0 },
+        { name: 'সহোদর ভাইয়ের পুত্রের পুত্র', count: input.fullNephewSonsCount || 0 },
+        { name: 'সৎ ভাই (বৈমাত্রেয়)-এর পুত্রের পুত্র', count: input.consanguineNephewSonsCount || 0 },
+        { name: 'আপন চাচা', count: input.paternalUnclesCount || 0 },
+        { name: 'সৎ চাচা (বৈমাত্রেয়)', count: input.consanguinePaternalUnclesCount || 0 },
+        { name: 'আপন চাচার পুত্র', count: input.fullUncleSonsCount || 0 },
+        { name: 'সৎ চাচার পুত্র', count: input.consanguineUncleSonsCount || 0 },
+        { name: 'আপন চাচার পুত্রের পুত্র', count: input.fullUncleGrandSonsCount || 0 },
+        { name: 'সৎ চাচার পুত্রের পুত্র', count: input.consanguineUncleGrandSonsCount || 0 },
+        { name: 'আপন চাচার পুত্রের পুত্রের পুত্র', count: input.fullUncleGreatGrandSonsCount || 0 },
+        { name: 'সৎ চাচার পুত্রের পুত্রের পুত্র', count: input.consanguineUncleGreatGrandSonsCount || 0 },
+      ];
+
+      const brothersExist = fullBrothers > 0 || consanguineBrothers > 0;
+      let collateralAssigned = false;
+
+      for (const agnate of collateralAgnates) {
+        if (agnate.count > 0) {
+          if (brothersExist) {
+            excludedHeirs.push(
+              `${agnate.name} (${toBengaliNumerals(agnate.count)} জন - নিকটবর্তী আসাবা (ভাই) থাকায় বঞ্চিত)`
+            );
+          } else if (!collateralAssigned && remainingAfterFixed > 0.00001) {
+            rawShares.push({
+              relation: `${agnate.name} (${toBengaliNumerals(agnate.count)} জন)`,
+              count: agnate.count,
+              category: 'আসাবা (অবশিষ্টভোগী)',
+              fractionLabel: 'সম্পূর্ণ অবশিষ্ট',
+              shareRatio: remainingAfterFixed,
+              explanation: `উচ্চতর কোনো ভাই বা ঊর্ধ্বতন আসাবা না থাকায় ${agnate.name} আসাবা হিসেবে অবশিষ্ট সম্পত্তি পান।`,
+              isAsaba: true,
+            });
+            remainingAfterFixed = 0;
+            collateralAssigned = true;
+          } else {
+            excludedHeirs.push(
+              `${agnate.name} (${toBengaliNumerals(agnate.count)} জন - নিকটবর্তী আসাবা থাকায় বঞ্চিত)`
+            );
+          }
+        }
       }
     }
   }
