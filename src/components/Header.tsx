@@ -2,17 +2,20 @@ import React, { useState } from 'react';
 import { Menu, X, Phone, MessageSquare, Compass, FileText, CheckCircle2, ShieldCheck, Sparkles, MapPin, Smartphone, Shield, HelpCircle, Scale, Map } from 'lucide-react';
 import { AhmedLogo } from './AhmedLogo';
 import { ScreenView } from '../types';
+import { PWAInstallButton } from './PWAInstallButton';
 
 interface HeaderProps {
   currentView: ScreenView;
   onNavigate: (view: ScreenView) => void;
   onReplaySplash: () => void;
+  onOpenAPKModal?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   currentView,
   onNavigate,
   onReplaySplash,
+  onOpenAPKModal,
 }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -45,15 +48,25 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </button>
 
-          {/* Hamburger Menu Toggle */}
-          <button
-            id="main-menu-toggle-btn"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="মেনু খুলুন"
-            className="p-2 rounded-xl text-[#0A2540] hover:bg-gray-100 active:scale-95 transition-all focus:outline-none border border-gray-200/60 cursor-pointer"
-          >
-            {menuOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
+          {/* Right Action Buttons */}
+          <div className="flex items-center gap-2">
+            {onOpenAPKModal && (
+              <PWAInstallButton
+                variant="compact"
+                onOpenModal={onOpenAPKModal}
+              />
+            )}
+
+            {/* Hamburger Menu Toggle */}
+            <button
+              id="main-menu-toggle-btn"
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label="মেনু খুলুন"
+              className="p-2 rounded-xl text-[#0A2540] hover:bg-gray-100 active:scale-95 transition-all focus:outline-none border border-gray-200/60 cursor-pointer"
+            >
+              {menuOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+          </div>
         </div>
       </header>
 
@@ -103,6 +116,18 @@ export const Header: React.FC<HeaderProps> = ({
                   <Compass size={18} className={currentView === 'home' ? 'text-amber-300' : 'text-[#0A2540]'} />
                   <span>হোমপেজ</span>
                 </button>
+
+                {onOpenAPKModal && (
+                  <div className="pt-1 pb-1">
+                    <PWAInstallButton
+                      variant="drawer"
+                      onOpenModal={() => {
+                        setMenuOpen(false);
+                        onOpenAPKModal();
+                      }}
+                    />
+                  </div>
+                )}
 
                 <div className="px-3 pt-3 pb-1 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
                   সার্ভিস সমূহ

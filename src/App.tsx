@@ -12,6 +12,9 @@ import { PrivacyPolicy } from './components/PrivacyPolicy';
 import { AdBanner } from './components/AdBanner';
 import { Religion } from './components/InheritanceCalculator/types';
 import { ShieldCheck } from 'lucide-react';
+import { APKInstallModal } from './components/APKInstallModal';
+import { OfflineIndicator } from './components/OfflineIndicator';
+import { PWAInstallButton } from './components/PWAInstallButton';
 
 export default function App() {
   const navigate = useNavigate();
@@ -35,6 +38,7 @@ export default function App() {
   });
 
   const [calculatorReligion, setCalculatorReligion] = useState<Religion>('muslim');
+  const [showAPKModal, setShowAPKModal] = useState(false);
 
   // Keep route and state in sync on browser back/forward navigation
   useEffect(() => {
@@ -83,6 +87,7 @@ export default function App() {
             if (isPrivacyRoute) navigate('/');
             setShowSplash(true);
           }}
+          onOpenAPKModal={() => setShowAPKModal(true)}
         />
 
         {/* Content Area */}
@@ -104,6 +109,12 @@ export default function App() {
                   <div className="w-full animate-in fade-in duration-200">
                     {/* Screen 1: Hero Section */}
                     <HeroSection />
+
+                    {/* Android APK & PWA Install Banner */}
+                    <PWAInstallButton
+                      variant="banner"
+                      onOpenModal={() => setShowAPKModal(true)}
+                    />
 
                     {/* Screen 1: Service Cards & Inheritance Calculator */}
                     <ServiceCards
@@ -145,6 +156,15 @@ export default function App() {
 
         {/* Fixed Banner Ad Placeholder at the very bottom (id="ad-banner") */}
         <AdBanner />
+
+        {/* Android APK & App Install Modal */}
+        <APKInstallModal
+          isOpen={showAPKModal}
+          onClose={() => setShowAPKModal(false)}
+        />
+
+        {/* Offline Connectivity Notification */}
+        <OfflineIndicator />
       </div>
     </div>
   );

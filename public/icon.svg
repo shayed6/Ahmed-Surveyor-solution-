@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#071829"/>
+      <stop offset="50%" stop-color="#0A2540"/>
+      <stop offset="100%" stop-color="#040F1D"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE082"/>
+      <stop offset="45%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#997015"/>
+    </linearGradient>
+    <linearGradient id="silverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="50%" stop-color="#E2E8F0"/>
+      <stop offset="100%" stop-color="#94A3B8"/>
+    </linearGradient>
+    <radialGradient id="lensGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.9"/>
+      <stop offset="60%" stop-color="#0284C7" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#0369A1" stop-opacity="0.2"/>
+    </radialGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <!-- Background with subtle rounded corners -->
+  <rect width="512" height="512" rx="108" fill="url(#bgGrad)"/>
+  
+  <!-- Subtle Outer Gold Accent Ring -->
+  <rect x="16" y="16" width="480" height="480" rx="96" fill="none" stroke="url(#goldGrad)" stroke-width="3" opacity="0.4"/>
+
+  <!-- Subtle Target Crosshair Grid -->
+  <g opacity="0.15" stroke="#FFFFFF" stroke-width="1.5" stroke-dasharray="4,6">
+    <circle cx="256" cy="230" r="140" fill="none"/>
+    <circle cx="256" cy="230" r="80" fill="none"/>
+    <line x1="256" y1="60" x2="256" y2="400"/>
+    <line x1="86" y1="230" x2="426" y2="230"/>
+  </g>
+
+  <!-- Main Survey Total Station Graphics -->
+  <g filter="url(#shadow)">
+    <!-- Tripod Legs -->
+    <!-- Left Leg -->
+    <path d="M228 300 L140 435" stroke="url(#goldGrad)" stroke-width="14" stroke-linecap="round"/>
+    <path d="M140 435 L125 455" stroke="#94A3B8" stroke-width="10" stroke-linecap="round"/>
+    <!-- Center Leg -->
+    <path d="M256 305 L256 455" stroke="url(#goldGrad)" stroke-width="15" stroke-linecap="round"/>
+    <path d="M256 455 L256 468" stroke="#94A3B8" stroke-width="11" stroke-linecap="round"/>
+    <!-- Right Leg -->
+    <path d="M284 300 L372 435" stroke="url(#goldGrad)" stroke-width="14" stroke-linecap="round"/>
+    <path d="M372 435 L387 455" stroke="#94A3B8" stroke-width="10" stroke-linecap="round"/>
+
+    <!-- Tripod Head / Tribrach Base -->
+    <path d="M210 305 L302 305 L288 285 L224 285 Z" fill="url(#goldGrad)"/>
+    <rect x="238" y="275" width="36" height="12" rx="3" fill="#E2E8F0"/>
+    
+    <!-- Leveling Screws -->
+    <circle cx="225" cy="298" r="5" fill="#CBD5E1"/>
+    <circle cx="287" cy="298" r="5" fill="#CBD5E1"/>
+
+    <!-- Total Station Body Standards (U-Frame) -->
+    <path d="M196 280 L204 185 L228 185 L222 280 Z" fill="url(#silverGrad)"/>
+    <path d="M316 280 L308 185 L284 185 L290 280 Z" fill="url(#silverGrad)"/>
+    <rect x="220" y="260" width="72" height="24" rx="4" fill="#0A2540" stroke="url(#goldGrad)" stroke-width="2"/>
+    
+    <!-- LCD Display Screen -->
+    <rect x="230" y="264" width="52" height="15" rx="2" fill="#0284C7" opacity="0.9"/>
+    <line x1="234" y1="271" x2="278" y2="271" stroke="#FFFFFF" stroke-width="1.5" opacity="0.8"/>
+
+    <!-- Telescope Barrel / EDM Optics (Horizontal Cylinder) -->
+    <rect x="170" y="196" width="172" height="52" rx="10" fill="url(#goldGrad)"/>
+    <!-- Sunshade / Objective Bell (Front) -->
+    <path d="M325 190 L360 182 L360 262 L325 254 Z" fill="#997015"/>
+    <ellipse cx="360" cy="222" rx="10" ry="40" fill="#0A2540"/>
+    <!-- Optical Lens Glass with Glowing Laser Reflex -->
+    <ellipse cx="357" cy="222" rx="7" ry="34" fill="url(#lensGlow)"/>
+    
+    <!-- Eyepiece (Rear) -->
+    <rect x="150" y="208" width="24" height="28" rx="4" fill="#334155"/>
+    <ellipse cx="150" cy="222" rx="4" ry="14" fill="#0284C7"/>
+
+    <!-- Handle on Top -->
+    <path d="M216 185 C216 145 296 145 296 185" fill="none" stroke="url(#silverGrad)" stroke-width="12" stroke-linecap="round"/>
+    
+    <!-- Center Target / Reticle / Laser Pulse Dot -->
+    <circle cx="378" cy="222" r="6" fill="#38BDF8"/>
+    <circle cx="378" cy="222" r="14" fill="none" stroke="#38BDF8" stroke-width="2" opacity="0.6"/>
+  </g>
+
+  <!-- Typography at bottom: AHMED SURVEY -->
+  <text x="256" y="475" text-anchor="middle" font-family="'Cinzel', 'Times New Roman', serif" font-size="24" font-weight="800" letter-spacing="4" fill="url(#goldGrad)">
+    AHMED SURVEY
+  </text>
+  <text x="256" y="495" text-anchor="middle" font-family="'Hind Siliguri', sans-serif" font-size="16" font-weight="600" letter-spacing="1" fill="#E2E8F0" opacity="0.85">
+    টোটাল স্টেশন সলুশন
+  </text>
+</svg>
