@@ -50,13 +50,6 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Right Action Buttons */}
           <div className="flex items-center gap-2">
-            {onOpenAPKModal && (
-              <PWAInstallButton
-                variant="compact"
-                onOpenModal={onOpenAPKModal}
-              />
-            )}
-
             {/* Hamburger Menu Toggle */}
             <button
               id="main-menu-toggle-btn"

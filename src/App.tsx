@@ -14,7 +14,6 @@ import { Religion } from './components/InheritanceCalculator/types';
 import { ShieldCheck } from 'lucide-react';
 import { APKInstallModal } from './components/APKInstallModal';
 import { OfflineIndicator } from './components/OfflineIndicator';
-import { PWAInstallButton } from './components/PWAInstallButton';
 
 export default function App() {
   const navigate = useNavigate();
@@ -109,12 +108,6 @@ export default function App() {
                   <div className="w-full animate-in fade-in duration-200">
                     {/* Screen 1: Hero Section */}
                     <HeroSection />
-
-                    {/* Android APK & PWA Install Banner */}
-                    <PWAInstallButton
-                      variant="banner"
-                      onOpenModal={() => setShowAPKModal(true)}
-                    />
 
                     {/* Screen 1: Service Cards & Inheritance Calculator */}
                     <ServiceCards
