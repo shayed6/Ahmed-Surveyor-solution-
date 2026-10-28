@@ -3,7 +3,7 @@
       "target": {
         "namespace": "android_app",
         "package_name": "app.netlify.surveyorshakil.twa",
-        "sha256_cert_fingerprints": ["E4:59:ED:09:4C:88:EE:2B:13:52:6F:D8:79:B8:9B:1C:17:30:A4:E3:3C:A1:4F:33:68:EB:B0:D0:AF:AD:C8:E9"]
+        "sha256_cert_fingerprints": ["6E:4B:E5:CB:F7:D2:57:6C:A6:64:AD:B9:10:8B:72:47:86:56:73:A1:A7:D9:EA:4F:9D:BC:72:2A:15:AA:2F:28"]
       }
     }]
 
