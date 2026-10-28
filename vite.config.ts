@@ -76,8 +76,8 @@ export default defineConfig(() => {
         includeAssets: ['offline.html', 'icon.svg', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/maskable-512.png'],
         manifest: {
           id: '/',
-          name: 'Ahmed Survey Solution',
-          short_name: 'Ahmed Survey',
+          name: 'Ahmmad Survey Solution',
+          short_name: 'Ahmmad Survey',
           description: 'আহম্মদ টোটাল স্টেশন - সার্ভে এন্ড সলুশন সেন্টার। ডিজিটাল ভূমি পরিমাপ ও ফরায়েজ ক্যালকুলেটর।',
           theme_color: '#0B2545',
           background_color: '#FFFFFF',
