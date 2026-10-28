@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.ahmmad.survey",
+      "sha256_cert_fingerprints": [
+        "E4:59:ED:09:4C:88:EE:2B:13:52:6F:D8:79:B8:9B:1C:17:30:A4:E3:3C:A1:4F:33:68:EB:B0:D0:AF:AD:C8:E9"
+      ]
+    }
+  }
+]
+

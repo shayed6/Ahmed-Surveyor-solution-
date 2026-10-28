@@ -73,14 +73,14 @@ export default defineConfig(() => {
       aistudioMediaPlugin(),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['apple-touch-icon.png', 'icon.svg', 'pwa-192x192.png', 'pwa-512x512.png', 'pwa-maskable-512x512.png'],
+        includeAssets: ['offline.html', 'icon.svg', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/maskable-512.png'],
         manifest: {
           id: '/',
-          name: 'Ahmed Survey Solution - আহম্মদ টোটাল স্টেশন',
-          short_name: 'আহম্মদ সার্ভে',
+          name: 'Ahmed Survey Solution',
+          short_name: 'Ahmed Survey',
           description: 'আহম্মদ টোটাল স্টেশন - সার্ভে এন্ড সলুশন সেন্টার। ডিজিটাল ভূমি পরিমাপ ও ফরায়েজ ক্যালকুলেটর।',
-          theme_color: '#0A2540',
-          background_color: '#0A2540',
+          theme_color: '#0B2545',
+          background_color: '#FFFFFF',
           display: 'standalone',
           orientation: 'portrait',
           start_url: '/',
@@ -88,19 +88,19 @@ export default defineConfig(() => {
           lang: 'bn',
           icons: [
             {
-              src: '/pwa-192x192.png',
+              src: '/icons/icon-192.png',
               sizes: '192x192',
               type: 'image/png',
               purpose: 'any',
             },
             {
-              src: '/pwa-512x512.png',
+              src: '/icons/icon-512.png',
               sizes: '512x512',
               type: 'image/png',
               purpose: 'any',
             },
             {
-              src: '/pwa-maskable-512x512.png',
+              src: '/icons/maskable-512.png',
               sizes: '512x512',
               type: 'image/png',
               purpose: 'maskable',
@@ -153,7 +153,7 @@ export default defineConfig(() => {
     },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
-      // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
+      // Do not modify—file watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',
       // Disable file watching when DISABLE_HMR is true to save CPU during agent edits.
       watch: process.env.DISABLE_HMR === 'true' ? null : {},

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>অফলাইন মোড - Ahmed Survey Solution</title>
+  <meta name="theme-color" content="#0B2545">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hind Siliguri", sans-serif;
+      background: #f8fafc;
+      color: #0F172A;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      text-align: center;
+    }
+    .card {
+      background: #FFFFFF;
+      max-width: 420px;
+      width: 100%;
+      border-radius: 20px;
+      padding: 32px 24px;
+      box-shadow: 0 10px 25px -5px rgba(11, 37, 69, 0.1), 0 8px 10px -6px rgba(11, 37, 69, 0.05);
+      border: 1px solid #e2e8f0;
+    }
+    .icon-container {
+      width: 96px;
+      height: 96px;
+      margin: 0 auto 20px;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(11, 37, 69, 0.15);
+      background: #0B2545;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .icon-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    h1 {
+      font-size: 20px;
+      color: #0B2545;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+    p {
+      font-size: 14px;
+      color: #64748B;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .btn {
+      display: inline-block;
+      width: 100%;
+      padding: 14px 20px;
+      background: #0B2545;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.2s ease;
+    }
+    .btn:hover {
+      background: #134074;
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: #fee2e2;
+      color: #b91c1c;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 18px;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ef4444;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon-container">
+      <img src="/icons/icon-192.png" alt="Ahmed Survey Solution" onerror="this.style.display='none'">
+    </div>
+    <div class="status-badge">
+      <span class="dot"></span> ইন্টারনেট সংযোগ নেই
+    </div>
+    <h1>আপনি বর্তমানে অফলাইনে আছেন</h1>
+    <p>ওয়েবসাইটটি অ্যাক্সেস করার জন্য ইন্টারনেট কানেকশন প্রয়োজন। অনুগ্রহ করে ওয়াইফাই অথবা মোবাইল ডাটা চালু করে আবার চেষ্টা করুন।</p>
+    <button class="btn" onclick="window.location.reload()">পুনরায় চেষ্টা করুন</button>
+  </div>
+</body>
+</html>
+

@@ -1,0 +1,51 @@
+{
+  "packageId": "com.ahmmad.survey",
+  "host": "surveyorshakil.netlify.app",
+  "name": "Ahmed Survey Solution",
+  "launcherName": "Ahmed Survey",
+  "display": "standalone",
+  "themeColor": "#0B2545",
+  "themeColorDark": "#000000",
+  "navigationColor": "#000000",
+  "navigationColorDark": "#000000",
+  "navigationDividerColor": "#000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#0B2545",
+  "enableNotifications": true,
+  "startUrl": "/",
+  "iconUrl": "http://127.0.0.1:8085/icons/icon-512.png",
+  "maskableIconUrl": "http://127.0.0.1:8085/icons/maskable-512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "C:\\Users\\DFIT\\.antigravity-ide\\Ahmed-Surveyor-solution-\\android.keystore",
+    "alias": "android"
+  },
+  "appVersionName": "2",
+  "appVersionCode": 2,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://surveyorshakil.netlify.app/manifest.webmanifest",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://surveyorshakil.netlify.app/",
+  "minSdkVersion": 21,
+  "orientation": "portrait",
+  "fingerprints": [
+    {
+      "value": "E4:59:ED:09:4C:88:EE:2B:13:52:6F:D8:79:B8:9B:1C:17:30:A4:E3:3C:A1:4F:33:68:EB:B0:D0:AF:AD:C8:E9"
+    }
+  ],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "protocolHandlers": [],
+  "fileHandlers": [],
+  "launchHandlerClientMode": "",
+  "displayOverride": [],
+  "appVersion": "2"
+}
