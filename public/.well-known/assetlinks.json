@@ -1,9 +1,18 @@
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "app.netlify.surveyorshakil.twa",
-        "sha256_cert_fingerprints": ["6E:4B:E5:CB:F7:D2:57:6C:A6:64:AD:B9:10:8B:72:47:86:56:73:A1:A7:D9:EA:4F:9D:BC:72:2A:15:AA:2F:28", "E4:59:ED:09:4C:88:EE:2B:13:52:6F:D8:79:B8:9B:1C:17:30:A4:E3:3C:A1:4F:33:68:EB:B0:D0:AF:AD:C8:E9"]
-      }
-    }]
-
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.netlify.surveyorshakil.twa",
+      "sha256_cert_fingerprints": [
+        "6E:4B:E5:CB:F7:D2:57:6C:A6:64:AD:B9:10:8B:72:47:86:56:73:A1:A7:D9:EA:4F:9D:BC:72:2A:15:AA:2F:28",
+        "E4:59:ED:09:4C:88:EE:2B:13:52:6F:D8:79:B8:9B:1C:17:30:A4:E3:3C:A1:4F:33:68:EB:B0:D0:AF:AD:C8:E9",
+        "1E:29:12:99:0C:38:60:62:E3:C4:A4:FC:7F:AE:01:09:21:CC:E0:64:7B:60:88:B4:A6:4D:81:85:4E:E5:A2:B4",
+        "41:51:EF:C7:60:A9:8D:65:F5:24:1B:77:E0:BA:61:5C:D0:6F:18:AF:7A:3E:47:A5:F7:BF:D9:32:61:DE:FD:53",
+        "09:6A:FD:B4:FB:62:64:99:18:25:74:67:18:C3:F9:79:C2:22:B5:AB:99:35:5D:3A:B5:80:18:2D:AE:24:3C:59"
+      ]
+    }
+  }
+]
